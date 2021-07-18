@@ -1,11 +1,12 @@
 import os
 import re
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
+from checkov.common.output.report import Report
 from checkov.runner_filter import RunnerFilter
 
-IGNORED_DIRECTORIES_ENV = os.getenv('CKV_IGNORED_DIRECTORIES', "node_modules,.terraform,.serverless")
+IGNORED_DIRECTORIES_ENV = os.getenv("CKV_IGNORED_DIRECTORIES", "node_modules,.terraform,.serverless")
 
 ignored_directories = IGNORED_DIRECTORIES_ENV.split(",")
 
@@ -14,11 +15,18 @@ class BaseRunner(ABC):
     check_type = ""
 
     @abstractmethod
-    def run(self, root_folder, external_checks_dir=None, files=None, runner_filter=RunnerFilter(), collect_skip_comments=True):
+    def run(
+        self,
+        root_folder: str,
+        external_checks_dir: Optional[List[str]] = None,
+        files: Optional[List[str]] = None,
+        runner_filter: RunnerFilter = RunnerFilter(),
+        collect_skip_comments: bool = True,
+    ) -> Report:
         pass
 
 
-def filter_ignored_paths(root_dir, names, excluded_paths: List[str]):
+def filter_ignored_paths(root_dir: str, names: List[str], excluded_paths: Optional[List[str]]) -> None:
     # we need to handle legacy logic, where directories to skip could be specified using the env var (default value above)
     # or a directory starting with '.'; these look only at directory basenames, not relative paths.
     #
@@ -38,12 +46,15 @@ def filter_ignored_paths(root_dir, names, excluded_paths: List[str]):
 
     # first handle the legacy logic - this will also remove files starting with '.' but that's probably fine
     # mostly this will just remove those problematic directories hardcoded above.
-    [names.remove(path) for path in list(names) if path in ignored_directories or path.startswith(".")]
+    for path in list(names):
+        if path in ignored_directories or path.startswith("."):
+            names.remove(path)
 
     # now apply the new logic
     # TODO this is not going to work well on Windows, because paths specified in the platform will use /, and
     #  paths specified via the CLI argument will presumably use \\
     if excluded_paths:
-        compiled = [re.compile(p.replace('.terraform', '\.terraform')) for p in excluded_paths]
-        [names.remove(path) for path in list(names) if any(pattern.search(os.path.join(root_dir, path)) for pattern in compiled)]
-
+        compiled = [re.compile(p.replace(".terraform", "\.terraform")) for p in excluded_paths]
+        for path in list(names):
+            if any(pattern.search(os.path.join(root_dir, path)) for pattern in compiled):
+                names.remove(path)

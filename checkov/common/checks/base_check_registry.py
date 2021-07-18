@@ -11,6 +11,7 @@ from checkov.common.checks.base_check import BaseCheck
 
 from collections import defaultdict
 
+from checkov.common.typing import _SkippedCheck
 from checkov.runner_filter import RunnerFilter
 
 
@@ -91,7 +92,7 @@ class BaseCheckRegistry(object):
         self,
         scanned_file: str,
         entity: Dict[str, Any],
-        skipped_checks: List[Dict[str, str]],
+        skipped_checks: List[_SkippedCheck],
         runner_filter: RunnerFilter,
     ) -> Dict[BaseCheck, Dict[str, Any]]:
 
@@ -104,7 +105,7 @@ class BaseCheckRegistry(object):
 
         checks = self.get_checks(entity_type)
         for check in checks:
-            skip_info = {}
+            skip_info: _SkippedCheck = {}
             if skipped_checks:
                 if check.id in [x["id"] for x in skipped_checks]:
                     skip_info = [x for x in skipped_checks if x["id"] == check.id][0]
@@ -121,7 +122,7 @@ class BaseCheckRegistry(object):
         entity_name: str,
         entity_type: str,
         scanned_file: str,
-        skip_info: Dict[str, str],
+        skip_info: _SkippedCheck,
     ) -> Dict[str, Any]:
         self.logger.debug("Running check: {} on file {}".format(check.name, scanned_file))
         result = check.run(
