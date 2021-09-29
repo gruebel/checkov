@@ -1,11 +1,14 @@
+from typing import List
+
 import configargparse
 
 from checkov.common.util.type_forcers import convert_str_to_bool
 
 
 class ExtArgumentParser(configargparse.ArgumentParser):
-
-    def write_config_file(self, parsed_namespace, output_file_paths, exit_after=False):
+    def write_config_file(
+        self, parsed_namespace: configargparse.Namespace, output_file_paths: List[str], exit_after: bool = False
+    ) -> None:
         """
         Write the given settings to output files. Overrides write_config_file from the class ArgumentParser for
         correcting types of some attributes (example: check, skip_check)
@@ -20,21 +23,19 @@ class ExtArgumentParser(configargparse.ArgumentParser):
                 with self._config_file_open_func(output_file_path, "w") as output_file:
                     pass
             except IOError as e:
-                raise ValueError("Couldn't open {} for writing: {}".format(
-                    output_file_path, e))
+                raise ValueError("Couldn't open {} for writing: {}".format(output_file_path, e))
         if output_file_paths:
             # generate the config file contents
-            config_items = self.get_items_for_config_file_output(
-                self._source_to_settings, parsed_namespace)
+            config_items = self.get_items_for_config_file_output(self._source_to_settings, parsed_namespace)
             # convert check, skip_check, soft_fail_on and hard_fail_on to list
-            if 'check' in config_items.keys():
-                config_items['check'] = config_items['check'][0].split(",")
-            if 'skip-check' in config_items.keys():
-                config_items['skip-check'] = config_items['skip-check'][0].split(",")
-            if 'soft-fail-on' in config_items.keys():
-                config_items['soft-fail-on'] = config_items['soft-fail-on'][0].split(",")
-            if 'hard-fail-on' in config_items.keys():
-                config_items['hard-fail-on'] = config_items['hard-fail-on'][0].split(",")
+            if "check" in config_items.keys():
+                config_items["check"] = config_items["check"][0].split(",")
+            if "skip-check" in config_items.keys():
+                config_items["skip-check"] = config_items["skip-check"][0].split(",")
+            if "soft-fail-on" in config_items.keys():
+                config_items["soft-fail-on"] = config_items["soft-fail-on"][0].split(",")
+            if "hard-fail-on" in config_items.keys():
+                config_items["hard-fail-on"] = config_items["hard-fail-on"][0].split(",")
             # convert strings to booleans
             for k in config_items.keys():
                 config_items[k] = convert_str_to_bool(config_items[k])
@@ -48,4 +49,3 @@ class ExtArgumentParser(configargparse.ArgumentParser):
                 self.exit(0, message)
             else:
                 print(message)
-

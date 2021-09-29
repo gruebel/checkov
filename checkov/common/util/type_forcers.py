@@ -83,12 +83,12 @@ def is_yaml(data: str) -> bool:
         return False
 
 
-def extract_policy_dict(policy: Union[dict, str]) -> Optional[dict]:
+def extract_policy_dict(policy: Union[Dict[str, Any], str]) -> Optional[Dict[str, Any]]:
     if isinstance(policy, dict):
         return policy
     if isinstance(policy, str):
         try:
-            policy_dict = json.loads(policy)
+            policy_dict: Dict[str, Any] = json.loads(policy)
             return policy_dict
         except JSONDecodeError:
             return None
@@ -96,7 +96,7 @@ def extract_policy_dict(policy: Union[dict, str]) -> Optional[dict]:
     return None
 
 
-def convert_csv_string_arg_to_list(csv_string_arg: Union[List[str], str, None]) -> list:
+def convert_csv_string_arg_to_list(csv_string_arg: Union[List[str], str, None]) -> List[str]:
     """
     Converts list type arguments that also support comma delimited strings into a list.
     For instance the --check flag in the CLI:

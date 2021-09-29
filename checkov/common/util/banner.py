@@ -14,5 +14,9 @@ By bridgecrew.io | version: {} """.format(version)
 
 new_version = check_for_update("checkov", version)
 if new_version:
-    banner = "\n" + banner + "\nUpdate available " + colored(version,"grey") + " -> " + colored(new_version, "green") + "\nRun " + colored(
-        "pip3 install -U checkov", "magenta") + " to update \n"
+    banner = (
+        "\n"
+        f"{banner}\n"
+        f"Update available {colored(version, 'grey')} -> {colored(new_version, 'green')}\n"
+        f"Run {colored('pip3 install -U checkov', 'magenta')} to update\n"
+    )

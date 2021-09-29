@@ -1,13 +1,38 @@
 import inspect
 from abc import ABCMeta
 from functools import update_wrapper
-from typing import Callable, Any, TypeVar, Dict, List
+from typing import Callable, Any, TypeVar, Dict, List, Tuple, Optional
 
+from typing_extensions import Protocol
+
+C = TypeVar("C", bound=Callable[..., Any])
 T = TypeVar("T")
 
 
+class MultiSignatureFunction(Protocol[C]):
+    __multi_signature_wrappers__: Dict[Any, Callable[..., T]]
+
+    __call__: C
+
+    def add_signature(
+        self, *, args: List[str], varargs: Any = None, varkw: Any = None
+    ) -> Callable[[Callable[..., T]], Callable[..., T]]:
+        ...
+
+
+class TempCallable(Protocol[C]):
+    __multi_signature_wrappers__: Dict[Any, Callable[..., T]]
+    add_signature: Optional[Callable[..., Any]]
+
+    __call__: C
+
+
 class MultiSignatureMeta(ABCMeta):
-    def __new__(mcs, name, bases, namespace, **kwargs):
+    __multi_signature_methods__: Dict[Any, Callable[..., T]]
+
+    def __new__(
+        mcs, name: str, bases: Tuple["MultiSignatureMeta", ...], namespace: Dict[str, Any], **kwargs: Any
+    ) -> "MultiSignatureMeta":
         cls = super().__new__(mcs, name, bases, namespace, **kwargs)
         multi_signatures = {
             name: value
@@ -61,8 +86,8 @@ class multi_signature:
     def __init__(self) -> None:
         self.__wrappers__: Dict[Any, Callable[..., T]] = {}
 
-    def __call__(self, fn: Callable[..., T]) -> Callable[..., T]:
-        fn.add_signature = self.add_signature
+    def __call__(self, fn: TempCallable[C]) -> MultiSignatureFunction[C]:
+        fn.add_signature = self.add_signature  # type ignore[assignment]
         fn.__multi_signature_wrappers__ = self.__wrappers__
         return fn
 
