@@ -1,12 +1,13 @@
 import os
 import re
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Union
+from typing import Union, Optional
 
 from colorama import init, Fore, Style
 from termcolor import colored
 
-from checkov.common.models.enums import CheckResult
+from checkov.common.models.enums import CheckResult, CheckCategories
 from checkov.common.util.file_utils import convert_to_unix_path
 
 init(autoreset=True)
@@ -29,7 +30,9 @@ class Record:
 
     def __init__(self, check_id, check_name, check_result, code_block, file_path, file_line_range, resource,
                  evaluations, check_class, file_abs_path, entity_tags=None,
-                 caller_file_path=None, caller_file_line_range=None, bc_check_id=None, resource_address=None):
+                 caller_file_path=None, caller_file_line_range=None, bc_check_id=None, resource_address=None,
+                 check_categories: "Optional[Iterable[CheckCategories]]" = None
+    ):
         """
         :param evaluations: A dict with the key being the variable name, value being a dict containing:
                              - 'var_file'
@@ -53,6 +56,7 @@ class Record:
         self.caller_file_path = caller_file_path
         self.caller_file_line_range = caller_file_line_range
         self.resource_address = resource_address
+        self.check_categories = check_categories or ()
 
     @staticmethod
     def _determine_repo_file_path(file_path: Union[str, "os.PathLike[str]"]) -> str:

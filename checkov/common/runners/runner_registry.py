@@ -23,7 +23,7 @@ from checkov.common.util.ext_cyclonedx_xml import ExtXml
 from checkov.common.util.banner import tool as tool_name
 
 CHECK_BLOCK_TYPES = frozenset(["resource", "data", "provider", "module"])
-OUTPUT_CHOICES = ["cli", "cyclonedx", "json", "junitxml", "github_failed_only", "sarif"]
+OUTPUT_CHOICES = ("asff", "cli", "cyclonedx", "json", "junitxml", "github_failed_only", "sarif")
 OUTPUT_DELIMITER = "\n--- OUTPUT DELIMITER ---\n"
 
 
@@ -96,6 +96,7 @@ class RunnerRegistry:
         sarif_reports = []
         junit_reports = []
         cyclonedx_reports = []
+        asff_reports = []
         for report in scan_reports:
             if not report.is_empty():
                 if "json" in config.output:
@@ -111,6 +112,8 @@ class RunnerRegistry:
                     cli_reports.append(report)
                 if "cyclonedx" in config.output:
                     cyclonedx_reports.append(report)
+                if "asff" in config.output:
+                    asff_reports.append(report)
             exit_codes.append(report.get_exit_code(config.soft_fail, config.soft_fail_on, config.hard_fail_on))
 
         if "cli" in config.output:
@@ -183,6 +186,14 @@ class RunnerRegistry:
             cyclonedx_output = ExtXml(bom=report.get_cyclonedx_bom())
             print(cyclonedx_output.output_as_string())
             output_formats.remove("cyclonedx")
+            if output_formats:
+                print(OUTPUT_DELIMITER)
+        if "asff" in config.output:
+            if len(asff_reports) == 1:
+                asff_output = asff_reports[0].create_asff_output()
+                print("printed some ASFF output")
+                # print(dumps(asff_output, indent=4, cls=CustomJSONEncoder))
+            output_formats.remove("asff")
             if output_formats:
                 print(OUTPUT_DELIMITER)
 

@@ -14,6 +14,7 @@ from tabulate import tabulate
 from termcolor import colored
 
 from checkov.common.models.enums import CheckResult
+from checkov.common.output.asff import ASFF
 from checkov.common.output.record import Record
 from checkov.common.util.type_forcers import convert_csv_string_arg_to_list
 from checkov.version import version
@@ -336,6 +337,12 @@ class Report:
         except EnvironmentError as e:
             print("\nAn error occurred while writing SARIF results to file: results.sarif")
             print(f"More details: \n {e}")
+
+    def create_asff_output(self) -> List[Dict[str, Any]]:
+        asff = ASFF(account_id="619572639823", region="us-west-2")
+        asff_output = asff.create_report(self)
+        asff.import_findings()
+        return asff_output
 
     @staticmethod
     def get_junit_xml_string(ts: List[TestSuite]) -> str:
