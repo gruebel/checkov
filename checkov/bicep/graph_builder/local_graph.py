@@ -43,10 +43,11 @@ class BicepElements(str, Enum):
 
 
 class BicepLocalGraph(LocalGraph):
-    def __init__(self, definitions: dict[Path, BicepJson]) -> None:
+    def __init__(self, definitions: dict[Path, BicepJson], file_path_sha_map: dict[Path, str]) -> None:
         super().__init__()
         self.vertices: list[BicepBlock] = []
         self.definitions = definitions
+        self.file_path_sha_map = file_path_sha_map
         self.vertices_by_name: dict[str, int] = {}
 
     def build_graph(self, render_variables: bool) -> None:
@@ -59,8 +60,32 @@ class BicepLocalGraph(LocalGraph):
             renderer = BicepVariableRenderer(self)
             renderer.render_variables_from_local_graph()
 
-    def _create_vertices(self) -> None:
-        for file_path, bicep_conf in self.definitions.items():
+    def update_graph(self, definitions: dict[Path, BicepJson], render_variables: bool) -> list[BicepBlock]:
+        vertices_before_update = len(self.vertices)
+        edges_before_update = len(self.edges)
+
+        self._create_vertices(definitions)
+
+        new_vertices = []
+        vertices_added = len(self.vertices) - vertices_before_update
+        logging.info(f"[BicepLocalGraph] added {vertices_added} vertices")
+        if vertices_added:
+            new_vertices = self.vertices[vertices_before_update:]
+            new_vertex_tuples = [(vertices_before_update + offset, vertex) for offset, vertex in enumerate(new_vertices)]
+            self._create_edges(new_vertex_tuples)
+            logging.info(f"[BicepLocalGraph] added {len(self.edges) - edges_before_update} edges")
+
+            if render_variables:
+                renderer = BicepVariableRenderer(self)
+                renderer.render_variables_from_local_graph()
+
+        return new_vertices
+
+    def _create_vertices(self, definitions: dict[Path, BicepJson] | None = None) -> None:
+        if not definitions:
+            definitions = self.definitions
+
+        for file_path, bicep_conf in definitions.items():
             self._create_global_vertices(file_path=file_path, globals_attrs=bicep_conf.get(BicepElements.GLOBALS.value))
             self._create_param_vertices(file_path=file_path, parameters=bicep_conf.get(BicepElements.PARAMETERS.value))
             self._create_var_vertices(file_path=file_path, variables=bicep_conf.get(BicepElements.VARIABLES.value))
@@ -92,6 +117,7 @@ class BicepLocalGraph(LocalGraph):
                 block_type=BlockType.TARGET_SCOPE,
                 attributes=attributes,  # type:ignore[arg-type]
                 id=BlockType.TARGET_SCOPE,
+                cache_hash=self.file_path_sha_map.get(file_path, ""),
             )
         )
 
@@ -111,6 +137,7 @@ class BicepLocalGraph(LocalGraph):
                     block_type=BlockType.PARAM,
                     attributes=attributes,  # type:ignore[arg-type]
                     id=f"{BlockType.PARAM}.{name}",
+                    cache_hash=self.file_path_sha_map.get(file_path, ""),
                 )
             )
 
@@ -130,6 +157,7 @@ class BicepLocalGraph(LocalGraph):
                     block_type=BlockType.VAR,
                     attributes=attributes,  # type:ignore[arg-type]
                     id=f"{BlockType.VAR}.{name}",
+                    cache_hash=self.file_path_sha_map.get(file_path, ""),
                 )
             )
 
@@ -159,6 +187,7 @@ class BicepLocalGraph(LocalGraph):
                     block_type=BlockType.RESOURCE,
                     attributes=attributes,
                     id=f"{config['type']}.{name}",
+                    cache_hash=self.file_path_sha_map.get(file_path, ""),
                 )
             )
 
@@ -187,6 +216,7 @@ class BicepLocalGraph(LocalGraph):
                     block_type=BlockType.MODULE,
                     attributes=attributes,
                     id=f"{config['type']}.{name}",
+                    cache_hash=self.file_path_sha_map.get(file_path, ""),
                 )
             )
 
@@ -206,12 +236,16 @@ class BicepLocalGraph(LocalGraph):
                     block_type=BlockType.OUTPUT,
                     attributes=attributes,  # type:ignore[arg-type]
                     id=f"{BlockType.OUTPUT}.{name}",
+                    cache_hash=self.file_path_sha_map.get(file_path, ""),
                 )
             )
 
-    def _create_edges(self) -> None:
+    def _create_edges(self, vertex_tuples: list[tuple[int, BicepBlock]] | None = None) -> None:
         # TODO: support connections in interpolated strings
-        for origin_vertex_index, vertex in enumerate(self.vertices):
+        if not vertex_tuples:
+            vertex_tuples = [(idx, vertex) for idx, vertex in enumerate(self.vertices)]
+
+        for origin_vertex_index, vertex in vertex_tuples:
             for attr_key, attr_value in vertex.attributes.items():
                 if isinstance(attr_value, BicepElement):
                     self._create_edge(
@@ -340,7 +374,7 @@ class BicepLocalGraph(LocalGraph):
         returns new_value = "key-data"
         """
 
-        if "." in element_name:
+        if isinstance(element_name, BicepElement) and "." in element_name:
             key_parts = element_name.split(".")
             new_value = value.get(key_parts[1])
 
@@ -348,7 +382,7 @@ class BicepLocalGraph(LocalGraph):
                 # couldn't find key in in value object
                 return None
 
-            return BicepLocalGraph.adjust_value(".".join(key_parts[1:]), new_value)
+            return BicepLocalGraph.adjust_value(BicepElement(".".join(key_parts[1:])), new_value)
 
         return value
 

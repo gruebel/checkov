@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from copy import copy
 from pathlib import Path
 from typing import cast, Type, TYPE_CHECKING, Any
 
@@ -14,6 +15,7 @@ from checkov.bicep.graph_builder.local_graph import BicepLocalGraph
 from checkov.bicep.graph_manager import BicepGraphManager
 from checkov.bicep.parser import Parser
 from checkov.bicep.utils import clean_file_path, get_scannable_file_paths
+from checkov.common.bridgecrew.platform_key import setup_cache, sha256sum
 from checkov.common.checks_infra.registry import get_graph_checks_registry
 
 from checkov.common.graph.db_connectors.networkx.networkx_db_connector import NetworkxConnector
@@ -30,6 +32,9 @@ if TYPE_CHECKING:
     from checkov.common.checks.base_check_registry import BaseCheckRegistry
     from checkov.common.graph.checks_infra.registry import BaseRegistry
     from checkov.common.graph.graph_manager import GraphManager
+
+
+CHECKOV_CACHE = True
 
 
 class Runner(BaseRunner):
@@ -60,6 +65,10 @@ class Runner(BaseRunner):
         self.definitions: dict[Path, BicepJson] = {}
         self.definitions_raw: dict[Path, list[tuple[int, str]]] = {}
 
+        self.new_definitions: dict[Path, BicepJson] = {}
+        self.cached_definitions: dict[Path, BicepJson] = {}
+        self.cached_definitions_raw: dict[Path, list[tuple[int, str]]] = {}
+
     def run(
         self,
         root_folder: str | Path | None,
@@ -70,15 +79,41 @@ class Runner(BaseRunner):
     ) -> Report:
         report = Report(Runner.check_type)
 
+        file_path_sha_map = {}
+        if CHECKOV_CACHE:
+            cache = setup_cache()
+            # cache.clear()
+
         if not self.context or not self.definitions:
             file_paths = get_scannable_file_paths(root_folder=root_folder, files=files)
 
             if not file_paths:
                 return report
 
-            self.definitions, self.definitions_raw, parsing_errors = Parser().get_files_definitions(file_paths)
+            if CHECKOV_CACHE:
+                for file_path in copy(file_paths):
+                    sha_sum = sha256sum(file_path)
+                    file_path_sha_map[file_path] = sha_sum
 
-            report.add_parsing_errors(parsing_errors)
+                    definition_and_raw = cache.get(key=sha_sum)
+                    if definition_and_raw:
+                        logging.info(f"cache hit {file_path}")
+                        self.cached_definitions[file_path] = definition_and_raw[0]
+                        self.cached_definitions_raw[file_path] = definition_and_raw[1]
+                        file_paths.remove(file_path)
+
+            definitions = {}
+            if file_paths:
+                definitions, self.definitions_raw, parsing_errors = Parser().get_files_definitions(file_paths)
+
+                report.add_parsing_errors(parsing_errors)
+
+            if CHECKOV_CACHE:
+                self.new_definitions = definitions
+                self.definitions = self.cached_definitions
+                self.definitions_raw.update(self.cached_definitions_raw)
+            else:
+                self.definitions = definitions
 
             if external_checks_dir:
                 for directory in external_checks_dir:
@@ -90,14 +125,39 @@ class Runner(BaseRunner):
             self.context = {}  # TODO: create context
 
             if CHECKOV_CREATE_GRAPH:
-                logging.info("Creating Bicep graph")
-                local_graph = self.graph_manager.build_graph_from_definitions(self.definitions)
-                logging.info("Successfully created Bicep graph")
+                local_graph = None
 
-                self.graph_manager.save_graph(local_graph)
-                self.definitions, self.breadcrumbs = convert_graph_vertices_to_tf_definitions(
-                    vertices=local_graph.vertices, root_folder=root_folder
-                )
+                if CHECKOV_CACHE:
+                    local_graph = cache.get(key=f"{CheckType.BICEP}-graph")
+                    if local_graph:
+                        logging.info(f"cache hit {CheckType.BICEP}-graph")
+                    if self.new_definitions:
+                        logging.info("Updating Bicep graph")
+                        local_graph, new_vertices = self.graph_manager.build_graph_from_definitions(definitions=self.new_definitions, file_path_sha_map=file_path_sha_map, cached_graph=local_graph)
+                        logging.info("Successfully updated Bicep graph")
+                        self.new_definitions, breadcrumbs = convert_graph_vertices_to_tf_definitions(
+                            vertices=new_vertices, root_folder=root_folder
+                        )
+                        self.definitions.update(self.new_definitions)
+
+                if not local_graph:
+                    logging.info("Creating Bicep graph")
+                    local_graph, _ = self.graph_manager.build_graph_from_definitions(definitions=self.definitions, file_path_sha_map=file_path_sha_map)
+                    logging.info("Successfully created Bicep graph")
+
+                    self.graph_manager.save_graph(local_graph)
+                    self.definitions, self.breadcrumbs = convert_graph_vertices_to_tf_definitions(
+                        vertices=local_graph.vertices, root_folder=root_folder
+                    )
+
+        if CHECKOV_CACHE:
+            for file_path, definition in self.new_definitions.items():
+                cache.set(key=file_path_sha_map[file_path], value=(definition, self.definitions_raw[file_path]))
+
+            if CHECKOV_CREATE_GRAPH and self.new_definitions:
+                cache.set(key=f"{CheckType.BICEP}-graph", value=local_graph)
+
+            cache.close()
 
         # run Python checks
         self.add_python_check_results(report=report, runner_filter=runner_filter)

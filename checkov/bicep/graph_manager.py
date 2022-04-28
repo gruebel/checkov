@@ -13,6 +13,7 @@ from checkov.bicep.graph_builder.local_graph import BicepLocalGraph
 
 if TYPE_CHECKING:
     from checkov.common.graph.graph_builder.local_graph import LocalGraph
+    from checkov.bicep.graph_builder.graph_components.blocks import BicepBlock
 
 
 class BicepGraphManager(GraphManager):
@@ -35,8 +36,14 @@ class BicepGraphManager(GraphManager):
         return local_graph, definitions
 
     def build_graph_from_definitions(
-        self, definitions: dict[Path, BicepJson], render_variables: bool = True
-    ) -> BicepLocalGraph:
-        local_graph = BicepLocalGraph(definitions)
+        self, definitions: dict[Path, BicepJson], file_path_sha_map: dict[Path, str], cached_graph: BicepLocalGraph | None = None, render_variables: bool = True
+    ) -> tuple[BicepLocalGraph, list[BicepBlock]]:
+        if cached_graph:
+            cached_graph.definitions.update(definitions)
+            cached_graph.file_path_sha_map = file_path_sha_map
+            new_vertices = cached_graph.update_graph(definitions, render_variables)
+            return cached_graph, new_vertices
+
+        local_graph = BicepLocalGraph(definitions, file_path_sha_map)
         local_graph.build_graph(render_variables)
-        return local_graph
+        return local_graph, local_graph.vertices

@@ -9,6 +9,10 @@ from checkov.common.graph.graph_builder.graph_resources_encription_manager impor
 from checkov.common.graph.graph_builder.graph_components.attribute_names import CustomAttributes
 
 
+def defaultdict_list():
+    return defaultdict(list)
+
+
 class LocalGraph:
     def __init__(self) -> None:
         self.vertices: List[Block] = []
@@ -17,7 +21,7 @@ class LocalGraph:
         self.out_edges: Dict[int, List[Edge]] = defaultdict(list)  # map between vertex index and the edges exiting it
         self.vertices_by_block_type: Dict[str, List[int]] = defaultdict(list)
         self.vertex_hash_cache: Dict[int, str] = defaultdict(str)
-        self.vertices_block_name_map: Dict[str, Dict[str, List[int]]] = defaultdict(lambda: defaultdict(list))
+        self.vertices_block_name_map: Dict[str, Dict[str, List[int]]] = defaultdict(defaultdict_list)
         self._graph_resource_encryption_manager = GraphResourcesEncryptionManager()
 
     @abstractmethod

@@ -14,5 +14,7 @@ class BicepBlock(Block):
         block_type: str,
         attributes: dict[str, Any],
         id: str = "",
+        cache_hash: str = "",
     ) -> None:
         super().__init__(name, config, path, block_type, attributes, id, "Bicep")
+        self.cache_hash = cache_hash
