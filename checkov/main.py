@@ -34,6 +34,7 @@ from checkov.common.images.image_referencer import enable_image_referencer
 from checkov.common.output.baseline import Baseline
 from checkov.common.bridgecrew.check_type import CheckType
 from checkov.common.runners.runner_registry import RunnerRegistry, OUTPUT_CHOICES
+from checkov.common.sca.package_referencer import enable_package_referencer
 from checkov.common.util import prompt
 from checkov.common.util.banner import banner as checkov_banner
 from checkov.common.util.config_utils import get_default_config_paths
@@ -149,6 +150,11 @@ def run(banner: str = checkov_banner, argv: List[str] = sys.argv[1:]) -> Optiona
         frameworks=config.framework,
         skip_frameworks=config.skip_framework,
     )
+    run_package_referencer = enable_package_referencer(
+        bc_integration=bc_integration,
+        frameworks=config.framework,
+        skip_frameworks=config.skip_framework,
+    )
 
     runner_filter = RunnerFilter(framework=config.framework, skip_framework=config.skip_framework, checks=config.check,
                                  skip_checks=config.skip_check, include_all_checkov_policies=config.include_all_checkov_policies,
@@ -160,6 +166,7 @@ def run(banner: str = checkov_banner, argv: List[str] = sys.argv[1:]) -> Optiona
                                  skip_cve_package=config.skip_cve_package, show_progress_bar=not config.quiet,
                                  use_enforcement_rules=config.use_enforcement_rules,
                                  run_image_referencer=run_image_referencer,
+                                 run_package_referencer=run_package_referencer,
                                  enable_secret_scan_all_files=bool(convert_str_to_bool(config.enable_secret_scan_all_files)),
                                  black_list_secret_scan=config.black_list_secret_scan)
 

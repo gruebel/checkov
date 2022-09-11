@@ -10,18 +10,23 @@ from schema import SchemaError  # type: ignore
 
 from checkov.common.images.image_referencer import ImageReferencer, Image
 from checkov.common.bridgecrew.check_type import CheckType
+from checkov.common.output.report import Report
+from checkov.common.sca.package_referencer import PackageReferencerMixin, Package
 from checkov.common.util.consts import START_LINE, END_LINE
 from checkov.common.util.type_forcers import force_list
 from checkov.github_actions.checks.registry import registry
 from checkov.github_actions.schema_validator import schema
+from checkov.runner_filter import RunnerFilter
 from checkov.yaml_doc.runner import Runner as YamlRunner
+
 if TYPE_CHECKING:
     from checkov.common.checks.base_check_registry import BaseCheckRegistry
+    from networkx import DiGraph
 
 WORKFLOW_DIRECTORY = ".github/workflows/"
 
 
-class Runner(YamlRunner, ImageReferencer):
+class Runner(PackageReferencerMixin, YamlRunner, ImageReferencer):
     check_type = CheckType.GITHUB_ACTIONS  # noqa: CCE003  # a static attribute
 
     def __init__(self):
@@ -41,6 +46,38 @@ class Runner(YamlRunner, ImageReferencer):
             if entity_schema and Runner.is_schema_valid(entity_schema[0]):
                 return entity_schema
         return None
+
+    def run(
+        self,
+        root_folder: str | None = None,
+        external_checks_dir: list[str] | None = None,
+        files: list[str] | None = None,
+        runner_filter: RunnerFilter | None = None,
+        collect_skip_comments: bool = True,
+    ) -> Report | list[Report]:
+        runner_filter = runner_filter or RunnerFilter()
+        # invoke the parent class's run method as usual
+        report = super().run(
+            root_folder=root_folder,
+            external_checks_dir=external_checks_dir,
+            files=files,
+            runner_filter=runner_filter,
+            collect_skip_comments=collect_skip_comments,
+        )
+
+        # check for package references
+        if runner_filter.run_package_referencer:
+            package_report = self.check_package_references(
+                resources=self.definitions,
+                root_path=root_folder,
+                runner_filter=runner_filter,
+            )
+
+            if package_report:
+                # due to too many tests failing only return a list, if there is an image report
+                return [report, package_report]
+
+        return report
 
     def is_workflow_file(self, file_path: str) -> bool:
         """
@@ -191,3 +228,27 @@ class Runner(YamlRunner, ImageReferencer):
                          f'schema={json.dumps(schema.json_schema("https://example.com/my-schema.json"), indent=4)}')
 
         return valid
+
+    def extract_packages(
+        self, graph_connector: DiGraph | None = None, resources: list[dict[str, Any]] | None = None
+    ) -> list[Package]:
+        packages = []
+
+        for file_path, definition in self.definitions.items():
+            for job_name, job_conf in definition["jobs"].items():
+                if job_name in (START_LINE, END_LINE):
+                    continue
+                for step_idx, step_conf in enumerate(job_conf["steps"]):
+                    ref_name = step_conf["uses"]
+                    package_name, version = ref_name.split("@")
+                    packages.append(Package(
+                        reference_name=ref_name,
+                        name=package_name,
+                        version=version,
+                        file_path=file_path,
+                        start_line=step_conf[START_LINE],
+                        end_line=step_conf[END_LINE],
+                        related_resource_id=None,  # todo: find the correct ID
+                    ))
+
+        return packages

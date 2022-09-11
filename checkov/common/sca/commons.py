@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from checkov.common.output.common import ImageDetails
 
+LICENSE_UNKNOWN = "Unknown"
 UNFIXABLE_VERSION = "N/A"
 
 TWISTCLI_TO_CHECKOV_LANG_NORMALIZATION = {

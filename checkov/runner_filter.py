@@ -40,6 +40,7 @@ class RunnerFilter(object):
             filtered_policy_ids: Optional[List[str]] = None,
             show_progress_bar: Optional[bool] = True,
             run_image_referencer: bool = False,
+            run_package_referencer: bool = False,
             enable_secret_scan_all_files: bool = False,
             black_list_secret_scan: Optional[List[str]] = None
     ) -> None:
@@ -97,6 +98,7 @@ class RunnerFilter(object):
         self.skip_cve_package = skip_cve_package
         self.filtered_policy_ids = filtered_policy_ids or []
         self.run_image_referencer = run_image_referencer
+        self.run_package_referencer = run_package_referencer
         self.enable_secret_scan_all_files = enable_secret_scan_all_files
         self.black_list_secret_scan = black_list_secret_scan
 
@@ -246,11 +248,15 @@ class RunnerFilter(object):
         run_image_referencer = obj.get('run_image_referencer')
         if run_image_referencer is None:
             run_image_referencer = False
+        run_package_referencer = obj.get("run_package_referencer")
+        if run_package_referencer is None:
+            run_package_referencer = False
         enable_secret_scan_all_files = bool(obj.get('enable_secret_scan_all_files'))
         black_list_secret_scan = obj.get('black_list_secret_scan')
         runner_filter = RunnerFilter(framework, checks, skip_checks, include_all_checkov_policies,
                                      download_external_modules, external_modules_download_path, evaluate_variables,
                                      runners, skip_framework, excluded_paths, all_external, var_files,
                                      skip_cve_package, use_enforcement_rules, filtered_policy_ids, show_progress_bar,
-                                     run_image_referencer, enable_secret_scan_all_files, black_list_secret_scan)
+                                     run_image_referencer, run_package_referencer, enable_secret_scan_all_files,
+                                     black_list_secret_scan)
         return runner_filter

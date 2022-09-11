@@ -22,6 +22,7 @@ from checkov.common.sca.commons import (
     UNFIXABLE_VERSION,
     get_package_type,
     normalize_twistcli_language,
+    LICENSE_UNKNOWN,
 )
 from checkov.common.util.http_utils import request_wrapper
 from checkov.runner_filter import RunnerFilter
@@ -267,7 +268,7 @@ def parse_vulns_to_records(
                         "licenses": ", ".join(
                             licenses_per_package_map[get_package_alias(package["name"], package["version"])]
                         )
-                        or "Unknown",
+                        or LICENSE_UNKNOWN,
                         "package_type": get_package_type(package["name"], package["version"], image_details),
                     },
                 )
