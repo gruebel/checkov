@@ -3,6 +3,7 @@ from __future__ import annotations
 import logging
 import os
 from collections.abc import Iterable
+from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import yaml
@@ -10,12 +11,14 @@ import yaml
 from checkov.common.output.report import Report
 from checkov.github_actions.image_referencer.manager import GithubActionsImageReferencerManager
 from checkov.github_actions.graph_builder.local_graph import GitHubActionsLocalGraph
+from checkov.github_actions.package_referencer.manager import GithubActionsPackageReferencerManager
 from checkov.github_actions.utils import is_schema_valid, is_workflow_file
 
 from checkov.runner_filter import RunnerFilter
 
 import checkov.common.parsers.yaml.loader as loader
 from checkov.common.images.image_referencer import Image, ImageReferencerMixin
+from checkov.common.sca.package_referencer import PackageReferencerMixin, Package
 from checkov.common.bridgecrew.check_type import CheckType
 from checkov.common.util.type_forcers import force_dict
 from checkov.github_actions.checks.registry import registry
@@ -27,9 +30,12 @@ if TYPE_CHECKING:
     from checkov.common.runners.graph_builder.local_graph import ObjectLocalGraph
     from checkov.common.runners.graph_manager import ObjectGraphManager
     from networkx import DiGraph
+    from typing_extensions import TypeAlias
+
+_Definitions: TypeAlias = "dict[str, dict[str, Any] | list[dict[str, Any]]]"
 
 
-class Runner(ImageReferencerMixin["dict[str, dict[str, Any] | list[dict[str, Any]]]"], YamlRunner):
+class Runner(ImageReferencerMixin[_Definitions], PackageReferencerMixin[None], YamlRunner):
     check_type = CheckType.GITHUB_ACTIONS  # noqa: CCE003  # a static attribute
 
     def __init__(
@@ -108,11 +114,14 @@ class Runner(ImageReferencerMixin["dict[str, dict[str, Any] | list[dict[str, Any
         runner_filter = runner_filter or RunnerFilter()
         report = super().run(root_folder=root_folder, external_checks_dir=external_checks_dir,
                              files=files, runner_filter=runner_filter, collect_skip_comments=collect_skip_comments)
-        if runner_filter.run_image_referencer:
-            if files:
-                # 'root_folder' shouldn't be empty to remove the whole path later and only leave the shortened form
-                root_folder = os.path.split(os.path.commonprefix(files))[0]
 
+        reports = report if isinstance(report, list) else [report]
+
+        if files:
+            # 'root_folder' shouldn't be empty to remove the whole path later and only leave the shortened form
+            root_folder = os.path.split(os.path.commonprefix(files))[0]
+
+        if runner_filter.run_image_referencer:
             image_report = self.check_container_image_references(
                 graph_connector=None,
                 root_path=root_folder,
@@ -122,16 +131,25 @@ class Runner(ImageReferencerMixin["dict[str, dict[str, Any] | list[dict[str, Any
             )
 
             if image_report:
-                if isinstance(report, list):
-                    return [*report, image_report]
-                return [report, image_report]
+                reports.append(image_report)
 
-        return report
+        if runner_filter.run_package_referencer:
+            package_report = self.check_package_references(
+                root_path=root_folder,
+                runner_filter=runner_filter,
+                graph_connector=self.graph_manager.get_reader_endpoint(),
+            )
+
+            if package_report:
+                reports.append(package_report)
+
+        return reports
 
     def extract_images(
-        self, graph_connector: DiGraph | None = None,
-            definitions: dict[str, dict[str, Any] | list[dict[str, Any]]] | None = None,
-            definitions_raw: dict[str, list[tuple[int, str]]] | None = None
+        self,
+        graph_connector: DiGraph | None = None,
+        definitions: _Definitions | None = None,
+        definitions_raw: dict[str, list[tuple[int, str]]] | None = None,
     ) -> list[Image]:
         images: list[Image] = []
         if not definitions or not definitions_raw:
@@ -144,6 +162,37 @@ class Runner(ImageReferencerMixin["dict[str, dict[str, Any] | list[dict[str, Any
             images.extend(manager.extract_images_from_workflow())
 
         return images
+
+    def extract_packages(
+        self,
+        graph_connector: DiGraph | None = None,
+        definitions: None = None,
+        definitions_raw: dict[str, list[tuple[int, str]]] | None = None
+    ) -> list[Package]:
+        if not graph_connector:
+            # should not happen
+            return []
+
+        manager = GithubActionsPackageReferencerManager(graph_connector=graph_connector)
+        packages = manager.extract_packages_from_workflow()
+
+        return packages
+
+    def extract_package_files(
+        self,
+        graph_connector: DiGraph | None = None,
+        definitions: _Definitions | None = None,
+        definitions_raw: dict[str, list[tuple[int, str]]] | None = None,
+        download_path: Path | None = None,
+    ) -> list[Package]:
+        if not graph_connector and not download_path:
+            # should not happen
+            return []
+
+        manager = GithubActionsPackageReferencerManager(graph_connector=graph_connector, download_path=download_path)
+        packages = manager.extract_package_files_from_workflow()
+
+        return packages
 
     def populate_metadata_dict(self) -> None:
         if isinstance(self.definitions, dict):

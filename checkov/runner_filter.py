@@ -42,6 +42,7 @@ class RunnerFilter(object):
             filtered_policy_ids: Optional[List[str]] = None,
             show_progress_bar: Optional[bool] = True,
             run_image_referencer: bool = False,
+            run_package_referencer: bool = False,
             enable_secret_scan_all_files: bool = False,
             block_list_secret_scan: Optional[List[str]] = None,
             deep_analysis: bool = False,
@@ -112,6 +113,7 @@ class RunnerFilter(object):
         self.skip_cve_package = skip_cve_package
         self.filtered_policy_ids = filtered_policy_ids or []
         self.run_image_referencer = run_image_referencer
+        self.run_package_referencer = run_package_referencer
         self.enable_secret_scan_all_files = enable_secret_scan_all_files
         self.block_list_secret_scan = block_list_secret_scan
         self.suppressed_policies: List[str] = []
@@ -297,13 +299,33 @@ class RunnerFilter(object):
         run_image_referencer = obj.get('run_image_referencer')
         if run_image_referencer is None:
             run_image_referencer = False
+        run_package_referencer = obj.get('run_package_referencer')
+        if run_package_referencer is None:
+            run_package_referencer = False
         enable_secret_scan_all_files = bool(obj.get('enable_secret_scan_all_files'))
         block_list_secret_scan = obj.get('block_list_secret_scan')
-        runner_filter = RunnerFilter(framework, checks, skip_checks, include_all_checkov_policies,
-                                     download_external_modules, external_modules_download_path, evaluate_variables,
-                                     runners, skip_framework, excluded_paths, all_external, var_files,
-                                     skip_cve_package, use_enforcement_rules, filtered_policy_ids, show_progress_bar,
-                                     run_image_referencer, enable_secret_scan_all_files, block_list_secret_scan)
+        runner_filter = RunnerFilter(
+            framework=framework,
+            checks=checks,
+            skip_checks=skip_checks,
+            include_all_checkov_policies=include_all_checkov_policies,
+            download_external_modules=download_external_modules,
+            external_modules_download_path=external_modules_download_path,
+            evaluate_variables=evaluate_variables,
+            runners=runners,
+            skip_framework=skip_framework,
+            excluded_paths=excluded_paths,
+            all_external=all_external,
+            var_files=var_files,
+            skip_cve_package=skip_cve_package,
+            use_enforcement_rules=use_enforcement_rules,
+            filtered_policy_ids=filtered_policy_ids,
+            show_progress_bar=show_progress_bar,
+            run_image_referencer=run_image_referencer,
+            run_package_referencer=run_package_referencer,
+            enable_secret_scan_all_files=enable_secret_scan_all_files,
+            block_list_secret_scan=block_list_secret_scan,
+        )
         return runner_filter
 
     def set_suppressed_policies(self, policy_level_suppressions: List[str]) -> None:

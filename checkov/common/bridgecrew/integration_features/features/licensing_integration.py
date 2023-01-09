@@ -65,6 +65,9 @@ class LicensingIntegration(BaseIntegrationFeature):
     def should_run_image_referencer(self) -> bool:
         return not self.open_source_only and CustomerSubscription.SCA in self.enabled_modules
 
+    def should_run_package_referencer(self) -> bool:
+        return not self.open_source_only and CustomerSubscription.SCA in self.enabled_modules
+
     @staticmethod
     def get_subscription_for_runner(runner_check_type: str) -> CustomerSubscription:
         return CategoryToSubscriptionMapping[CodeCategoryMapping[runner_check_type]]

@@ -729,6 +729,7 @@ class Checkov:
         integration_feature_registry.run_pre_scan()
 
         runner_filter.run_image_referencer = licensing_integration.should_run_image_referencer()
+        runner_filter.run_package_referencer = licensing_integration.should_run_package_referencer()
 
         runner_filter.filtered_policy_ids = policy_metadata_integration.filtered_policy_ids
         logger.debug(f"Filtered list of policies: {runner_filter.filtered_policy_ids}")

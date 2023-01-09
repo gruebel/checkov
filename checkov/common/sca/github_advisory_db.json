@@ -1,0 +1,2125 @@
+{
+  "actions/runner": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2022-39321",
+        "status": "fixed in 2.283.4",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n\nThe actions runner invokes the docker cli directly in order to run job containers, service containers, or container actions. A bug in the logic for how the environment is encoded into these docker commands was discovered that allows an input to escape the environment variable and modify that docker command invocation directly. Jobs that use [container actions](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action), [job containers](https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container), or [service containers](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) alongside untrusted user inputs in environment variables may be vulnerable.\n\n### Patches\nThe Actions Runner has been patched, both on `github.com` and hotfixes for GHES and GHAE customers. Please update to one of the following versions of the runner:\n- 2.296.2\n- 2.293.1\n- 2.289.4\n- 2.285.2\n- 2.283.4\n\nGHES and GHAE customers may want to patch their instance in order to have their runners automatically upgrade to these new runner versions.\n\n### Workarounds\nYou may want to consider removing any container actions, job containers, or service containers from your jobs until you are able to upgrade your runner versions.\n\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [the actions runner](https://github.com/actions/runner)\n",
+        "severity": "HIGH",
+        "packageName": "actions/runner",
+        "link": "https://github.com/advisories/GHSA-2c6m-6gqh-6qg3",
+        "riskFactors": [],
+        "impactedVersions": "< 2.283.4",
+        "publishedDate": "2022-10-25T19:54:27Z",
+        "discoveredDate": "2022-10-25T19:54:27Z",
+        "fixDate": "2022-09-20T18:23:02Z",
+        "fixedVersion": "2.283.4",
+        "fixedCommitHash": "436989949b1b66b7a57bf4f6e6acbc854d329e5e"
+      },
+      {
+        "id": "CVE-2022-39321",
+        "status": "fixed in 2.285.2",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n\nThe actions runner invokes the docker cli directly in order to run job containers, service containers, or container actions. A bug in the logic for how the environment is encoded into these docker commands was discovered that allows an input to escape the environment variable and modify that docker command invocation directly. Jobs that use [container actions](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action), [job containers](https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container), or [service containers](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) alongside untrusted user inputs in environment variables may be vulnerable.\n\n### Patches\nThe Actions Runner has been patched, both on `github.com` and hotfixes for GHES and GHAE customers. Please update to one of the following versions of the runner:\n- 2.296.2\n- 2.293.1\n- 2.289.4\n- 2.285.2\n- 2.283.4\n\nGHES and GHAE customers may want to patch their instance in order to have their runners automatically upgrade to these new runner versions.\n\n### Workarounds\nYou may want to consider removing any container actions, job containers, or service containers from your jobs until you are able to upgrade your runner versions.\n\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [the actions runner](https://github.com/actions/runner)\n",
+        "severity": "HIGH",
+        "packageName": "actions/runner",
+        "link": "https://github.com/advisories/GHSA-2c6m-6gqh-6qg3",
+        "riskFactors": [],
+        "impactedVersions": ">= 2.284.0, < 2.285.2",
+        "publishedDate": "2022-10-25T19:54:27Z",
+        "discoveredDate": "2022-10-25T19:54:27Z",
+        "fixDate": "2022-09-20T18:22:36Z",
+        "fixedVersion": "2.285.2",
+        "fixedCommitHash": "7f6b9e55d60c0d67df28819138b563be4ead83f9"
+      },
+      {
+        "id": "CVE-2022-39321",
+        "status": "fixed in 2.289.4",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n\nThe actions runner invokes the docker cli directly in order to run job containers, service containers, or container actions. A bug in the logic for how the environment is encoded into these docker commands was discovered that allows an input to escape the environment variable and modify that docker command invocation directly. Jobs that use [container actions](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action), [job containers](https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container), or [service containers](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) alongside untrusted user inputs in environment variables may be vulnerable.\n\n### Patches\nThe Actions Runner has been patched, both on `github.com` and hotfixes for GHES and GHAE customers. Please update to one of the following versions of the runner:\n- 2.296.2\n- 2.293.1\n- 2.289.4\n- 2.285.2\n- 2.283.4\n\nGHES and GHAE customers may want to patch their instance in order to have their runners automatically upgrade to these new runner versions.\n\n### Workarounds\nYou may want to consider removing any container actions, job containers, or service containers from your jobs until you are able to upgrade your runner versions.\n\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [the actions runner](https://github.com/actions/runner)\n",
+        "severity": "HIGH",
+        "packageName": "actions/runner",
+        "link": "https://github.com/advisories/GHSA-2c6m-6gqh-6qg3",
+        "riskFactors": [],
+        "impactedVersions": ">= 2.286.0, < 2.289.4",
+        "publishedDate": "2022-10-25T19:54:27Z",
+        "discoveredDate": "2022-10-25T19:54:27Z",
+        "fixDate": "2022-09-20T18:22:06Z",
+        "fixedVersion": "2.289.4",
+        "fixedCommitHash": "3c64f263211f021532a212db171229415cb0f074"
+      },
+      {
+        "id": "CVE-2022-39321",
+        "status": "fixed in 2.293.1",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n\nThe actions runner invokes the docker cli directly in order to run job containers, service containers, or container actions. A bug in the logic for how the environment is encoded into these docker commands was discovered that allows an input to escape the environment variable and modify that docker command invocation directly. Jobs that use [container actions](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action), [job containers](https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container), or [service containers](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) alongside untrusted user inputs in environment variables may be vulnerable.\n\n### Patches\nThe Actions Runner has been patched, both on `github.com` and hotfixes for GHES and GHAE customers. Please update to one of the following versions of the runner:\n- 2.296.2\n- 2.293.1\n- 2.289.4\n- 2.285.2\n- 2.283.4\n\nGHES and GHAE customers may want to patch their instance in order to have their runners automatically upgrade to these new runner versions.\n\n### Workarounds\nYou may want to consider removing any container actions, job containers, or service containers from your jobs until you are able to upgrade your runner versions.\n\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [the actions runner](https://github.com/actions/runner)\n",
+        "severity": "HIGH",
+        "packageName": "actions/runner",
+        "link": "https://github.com/advisories/GHSA-2c6m-6gqh-6qg3",
+        "riskFactors": [],
+        "impactedVersions": ">= 2.290.0, < 2.293.1",
+        "publishedDate": "2022-10-25T19:54:27Z",
+        "discoveredDate": "2022-10-25T19:54:27Z",
+        "fixDate": "2022-09-20T16:40:15Z",
+        "fixedVersion": "2.293.1",
+        "fixedCommitHash": "a78e6e059486e73821fccb510b081aceac64cf86"
+      },
+      {
+        "id": "CVE-2022-39321",
+        "status": "fixed in 2.296.2",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n\nThe actions runner invokes the docker cli directly in order to run job containers, service containers, or container actions. A bug in the logic for how the environment is encoded into these docker commands was discovered that allows an input to escape the environment variable and modify that docker command invocation directly. Jobs that use [container actions](https://docs.github.com/en/actions/creating-actions/creating-a-docker-container-action), [job containers](https://docs.github.com/en/actions/using-jobs/running-jobs-in-a-container), or [service containers](https://docs.github.com/en/actions/using-containerized-services/about-service-containers) alongside untrusted user inputs in environment variables may be vulnerable.\n\n### Patches\nThe Actions Runner has been patched, both on `github.com` and hotfixes for GHES and GHAE customers. Please update to one of the following versions of the runner:\n- 2.296.2\n- 2.293.1\n- 2.289.4\n- 2.285.2\n- 2.283.4\n\nGHES and GHAE customers may want to patch their instance in order to have their runners automatically upgrade to these new runner versions.\n\n### Workarounds\nYou may want to consider removing any container actions, job containers, or service containers from your jobs until you are able to upgrade your runner versions.\n\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [the actions runner](https://github.com/actions/runner)\n",
+        "severity": "HIGH",
+        "packageName": "actions/runner",
+        "link": "https://github.com/advisories/GHSA-2c6m-6gqh-6qg3",
+        "riskFactors": [],
+        "impactedVersions": ">= 2.294.0, < 2.296.1",
+        "publishedDate": "2022-10-25T19:54:27Z",
+        "discoveredDate": "2022-10-25T19:54:27Z",
+        "fixDate": "2022-09-08T17:38:20Z",
+        "fixedVersion": "2.296.2",
+        "fixedCommitHash": "21c30edf1e7a80e041649848ea1d91b885a8762e"
+      }
+    ],
+    "commit_hashes": {
+      "82e9857d4fc2cb788b39238f781d74fa68e821ed": {
+        "tag_name": "sample",
+        "commit_date": "2019-10-25T14:38:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "c8afc848403652f31f84eb362fc0696ee23cffca": {
+        "tag_name": "v2.159.0",
+        "commit_date": "2019-10-10T04:52:42Z",
+        "license_spdx_id": "MIT"
+      },
+      "05f0b938ace187ceaf243179a374f7e2fddb7103": {
+        "tag_name": "v2.159.1",
+        "commit_date": "2019-10-17T21:05:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "7b158fff05ec016aaaf492e8db93b5cffb2c73c8": {
+        "tag_name": "v2.159.2",
+        "commit_date": "2019-10-22T17:41:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "1413297394f94a1b768bda66254fc658b4a04591": {
+        "tag_name": "v2.160.0",
+        "commit_date": "2019-10-28T17:44:09Z",
+        "license_spdx_id": "MIT"
+      },
+      "2247f2e3ea0fc37ebcaf58b74756a955944e6a7d": {
+        "tag_name": "v2.160.1",
+        "commit_date": "2019-11-05T20:43:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "8e4c7c9f9092e4ba1874e214c9c40a106eb5f8f0": {
+        "tag_name": "v2.160.2",
+        "commit_date": "2019-11-08T16:01:27Z",
+        "license_spdx_id": "MIT"
+      },
+      "3ade8424a5ef383363b7c8decfef2280d0dedb97": {
+        "tag_name": "v2.161.0",
+        "commit_date": "2019-11-12T16:36:25Z",
+        "license_spdx_id": "MIT"
+      },
+      "b061ec410f2ec3a3e15f5ea6e6cd15c1653624a1": {
+        "tag_name": "v2.162.0",
+        "commit_date": "2019-12-02T21:54:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "9bbbca9e5d361955c609ef7b3a46350712f3e618": {
+        "tag_name": "v2.163.0",
+        "commit_date": "2019-12-12T20:20:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "b15230f7a1f631ecfce58207b9a9c733fa01503f": {
+        "tag_name": "v2.163.1",
+        "commit_date": "2019-12-18T00:19:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "40302373bad75bbea2d0a47c21788387bf8f483f": {
+        "tag_name": "v2.164.0",
+        "commit_date": "2019-12-18T20:39:26Z",
+        "license_spdx_id": "MIT"
+      },
+      "a3c2479a298682bf48b7ca535707728e6f945733": {
+        "tag_name": "v2.165.0",
+        "commit_date": "2020-01-28T03:14:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "a0a590fb48fa2db92dacdef5d9b94294ab7940b4": {
+        "tag_name": "v2.165.1",
+        "commit_date": "2020-01-31T03:14:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "745b90a8b27fe9e2d13ec08a17890597a7582899": {
+        "tag_name": "v2.165.2",
+        "commit_date": "2020-02-12T19:26:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "9fc0686dc26c62ada68c9630c941055af21e050e": {
+        "tag_name": "v2.168.0",
+        "commit_date": "2020-03-24T20:25:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "7817e1a97608d0a326b6c98d1157a67eba49603b": {
+        "tag_name": "v2.169.0",
+        "commit_date": "2020-04-08T15:32:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "c126b52fe5bb86c38032439abc64ae790bb01f38": {
+        "tag_name": "v2.169.1",
+        "commit_date": "2020-04-14T18:36:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "7a6523602242d4a7cdaea81f09010fddf1f3999f": {
+        "tag_name": "v2.262.0",
+        "commit_date": "2020-05-11T19:05:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "cd8e4ddba19f79874650ec54ba786c51d771f54e": {
+        "tag_name": "v2.262.1",
+        "commit_date": "2020-05-12T20:09:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "11435857e4cd9795fa5ee68c20b674e5f96052ab": {
+        "tag_name": "v2.263.0",
+        "commit_date": "2020-05-21T19:49:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "c776861f077c34ba2b755ecf9dc7aca88586e856": {
+        "tag_name": "v2.267.0",
+        "commit_date": "2020-06-23T18:20:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "fd3c9de49d3894943c54c08c92eba9f4e2b43f79": {
+        "tag_name": "v2.267.1",
+        "commit_date": "2020-07-01T02:19:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "ae543d59756d8440d9b450f3ca74ada6a1b8aefc": {
+        "tag_name": "v2.272.0",
+        "commit_date": "2020-07-29T19:32:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "1d68b0448c8b517e82c7eebbc4f226e6ed088e3d": {
+        "tag_name": "v2.273.0",
+        "commit_date": "2020-08-19T14:47:07Z",
+        "license_spdx_id": "MIT"
+      },
+      "476640fd51b8d3a7c1b1ebbdd2ca1249afd66d52": {
+        "tag_name": "v2.273.1",
+        "commit_date": "2020-09-08T17:32:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "b75246e0fe35f83d6b586476b387822146b42fd6": {
+        "tag_name": "v2.273.2",
+        "commit_date": "2020-09-14T18:10:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "c5904d5da895e4a803d7e0f61674afed49d92a7a": {
+        "tag_name": "v2.273.3",
+        "commit_date": "2020-09-16T15:23:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "24845a5a01cd29ddf6038c8c5bfd1b91552fb685": {
+        "tag_name": "v2.273.4",
+        "commit_date": "2020-09-17T18:13:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "a79bab4b3c993a205a2d73d2b618299d8a96bd26": {
+        "tag_name": "v2.273.5",
+        "commit_date": "2020-10-02T15:59:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "ad745669526010737d2ac2dcd10de80732e8390d": {
+        "tag_name": "v2.273.6",
+        "commit_date": "2020-11-02T19:22:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "dd945096d01fe8716807115d9e0166bacbce7c03": {
+        "tag_name": "v2.274.0",
+        "commit_date": "2020-11-05T15:35:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "c3219ccd9cc7acedb4996d93c2284e50da5d1f55": {
+        "tag_name": "v2.274.1",
+        "commit_date": "2020-11-09T14:23:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "9987a8d024a6075cd2357d07c5aec9785126d5a9": {
+        "tag_name": "v2.274.2",
+        "commit_date": "2020-11-16T13:35:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "0fe3c90573d4f17fa083a0c7ef2c309c64a784d8": {
+        "tag_name": "v2.275.0",
+        "commit_date": "2020-12-14T16:14:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "de955418e4e8e0c51546a8495d9236f24edc1321": {
+        "tag_name": "v2.275.1",
+        "commit_date": "2020-12-14T21:37:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "2ee7717774348de7270a4c04ef1c4b4e26477138": {
+        "tag_name": "v2.276.0",
+        "commit_date": "2021-01-15T14:18:37Z",
+        "license_spdx_id": "MIT"
+      },
+      "5effa808be96eae7f2e08d713426b8d056bddff1": {
+        "tag_name": "v2.276.1",
+        "commit_date": "2021-01-21T19:27:46Z",
+        "license_spdx_id": "MIT"
+      },
+      "a0fa09ddccf4320a2aff590060217fadcc88a8d4": {
+        "tag_name": "v2.277.0",
+        "commit_date": "2021-02-09T18:30:46Z",
+        "license_spdx_id": "MIT"
+      },
+      "183a3dd9a0d4d51feddc5fe9fa6c3b5f8b08343d": {
+        "tag_name": "v2.277.1",
+        "commit_date": "2021-02-09T19:48:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "62d926efce35d3ea16d7624a25aaa5b300737def": {
+        "tag_name": "v2.278.0",
+        "commit_date": "2021-04-16T15:53:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "6b75179ec79e2041b3b5b4e9206b73db2d206aac": {
+        "tag_name": "v2.279.0",
+        "commit_date": "2021-07-21T15:53:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "ed15c5389b7c17f5b83cc542f06ee10d8a0a3f5d": {
+        "tag_name": "v2.280.0",
+        "commit_date": "2021-08-03T15:30:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "4d17f77f5e8d552740a91ce2868fd05ff5a0dfee": {
+        "tag_name": "v2.280.1",
+        "commit_date": "2021-08-04T17:34:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "ccafb91bfbcee5bed530aa82a1a0381b2c8f260c": {
+        "tag_name": "v2.280.2",
+        "commit_date": "2021-08-12T17:39:28Z",
+        "license_spdx_id": "MIT"
+      },
+      "409920e9f03bd38fe6e58807f069394993ce32e4": {
+        "tag_name": "v2.280.3",
+        "commit_date": "2021-08-19T13:10:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "b6aa01fabcad04dd03a5e6d6e780fafcd634bbd9": {
+        "tag_name": "v2.281.0",
+        "commit_date": "2021-08-30T17:27:28Z",
+        "license_spdx_id": "MIT"
+      },
+      "c8caf59bb7adaa87c4cf8f61372670d338a13f2d": {
+        "tag_name": "v2.281.1",
+        "commit_date": "2021-09-01T20:29:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "f954835f54cf0e699c5284f86238b6c4173eda4e": {
+        "tag_name": "v2.282.0",
+        "commit_date": "2021-09-13T18:12:48Z",
+        "license_spdx_id": "MIT"
+      },
+      "f9ce10da6d3868467df742575df29fadd334e856": {
+        "tag_name": "v2.282.1",
+        "commit_date": "2021-09-15T18:00:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "b03ca604ff702877ec49cfd3f06285d3e8d95400": {
+        "tag_name": "v2.283.0",
+        "commit_date": "2021-09-20T13:15:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "e6baf0d2755bc747d0eb58f24941e273d16c6524": {
+        "tag_name": "v2.283.1",
+        "commit_date": "2021-09-20T14:02:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "4d908df4b2d8c51e079fac1c50bb8275645d06ad": {
+        "tag_name": "v2.283.2",
+        "commit_date": "2021-09-30T12:58:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "844595b1b3f2b73aa4aa94025326fc0a8c0ca780": {
+        "tag_name": "v2.283.3",
+        "commit_date": "2021-10-04T19:10:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "436989949b1b66b7a57bf4f6e6acbc854d329e5e": {
+        "tag_name": "v2.283.4",
+        "commit_date": "2022-09-20T18:23:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "9027c154d05776c16f6df6c0345bc9ec20440ebe": {
+        "tag_name": "v2.284.0",
+        "commit_date": "2021-11-01T15:32:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "c75a77df668b81fa8d517fda2bb20b4f96dd9d6e": {
+        "tag_name": "v2.285.0",
+        "commit_date": "2021-11-29T16:22:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "50afba61b40932c1084e31b5e9e7f5af325cc2ac": {
+        "tag_name": "v2.285.1",
+        "commit_date": "2021-12-06T16:54:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "7f6b9e55d60c0d67df28819138b563be4ead83f9": {
+        "tag_name": "v2.285.2",
+        "commit_date": "2022-09-20T18:22:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "f1ddeb0d06bdbe3182a4f01c44ef622ec0c13437": {
+        "tag_name": "v2.286.0",
+        "commit_date": "2021-12-21T15:51:03Z",
+        "license_spdx_id": "MIT"
+      },
+      "f4a2c808ebfde6798803139c41783fe2bf18a9a8": {
+        "tag_name": "v2.286.1",
+        "commit_date": "2022-01-14T17:03:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "444f05427875e5404126199b7feb76a8da409414": {
+        "tag_name": "v2.287.0",
+        "commit_date": "2022-01-27T16:37:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "b4e17c4fee3674494ffe88c5e06e42acb6788a37": {
+        "tag_name": "v2.287.1",
+        "commit_date": "2022-01-27T21:01:31Z",
+        "license_spdx_id": "MIT"
+      },
+      "d6af5b2955b4f6e4af64b5caeb175decdb38c098": {
+        "tag_name": "v2.288.0",
+        "commit_date": "2022-02-25T21:43:45Z",
+        "license_spdx_id": "MIT"
+      },
+      "e95a2b840b74568ec30c993462165ece91040f8e": {
+        "tag_name": "v2.288.1",
+        "commit_date": "2022-02-28T19:07:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "bc0c1263f0b74e8ce647931c9a288aa850dff009": {
+        "tag_name": "v2.289.0",
+        "commit_date": "2022-03-18T15:33:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "b3b97b73282e89e1d3247a54156e5dca39a57a45": {
+        "tag_name": "v2.289.1",
+        "commit_date": "2022-03-18T18:36:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "529e404063bef464e93475d93affe93f97080dd1": {
+        "tag_name": "v2.289.2",
+        "commit_date": "2022-03-30T14:25:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "b96b3c58c771e1b1fc97e027f7f9e405d89a1ac0": {
+        "tag_name": "v2.289.3",
+        "commit_date": "2022-04-19T20:30:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "3c64f263211f021532a212db171229415cb0f074": {
+        "tag_name": "v2.289.4",
+        "commit_date": "2022-09-20T18:22:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "d95bfc5d1f73b82e16c2700d9dad2bd0fb3401ca": {
+        "tag_name": "v2.290.0",
+        "commit_date": "2022-04-12T14:50:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "b86ce4874592d0ec108506e8fa826ecda1c598c6": {
+        "tag_name": "v2.290.1",
+        "commit_date": "2022-04-14T14:38:43Z",
+        "license_spdx_id": "MIT"
+      },
+      "dac4363206d060d98c5ba98c0fe76d81004c03e9": {
+        "tag_name": "v2.291.0",
+        "commit_date": "2022-04-29T11:53:22Z",
+        "license_spdx_id": "MIT"
+      },
+      "496ec0df97891bd8e50f4431d01874ac3ab75a93": {
+        "tag_name": "v2.291.1",
+        "commit_date": "2022-04-29T14:55:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "d4b794dd645e16990ae0530bf977e26ab24be9d9": {
+        "tag_name": "v2.292.0",
+        "commit_date": "2022-05-23T15:15:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "7785d8e1045339fbc88b92c9b506d35ed2b7523c": {
+        "tag_name": "v2.293.0",
+        "commit_date": "2022-06-10T13:57:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "a78e6e059486e73821fccb510b081aceac64cf86": {
+        "tag_name": "v2.293.1",
+        "commit_date": "2022-09-20T16:40:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "709bd6113d2fca3a89a0fef11913ce4efd7b8cc5": {
+        "tag_name": "v2.294.0",
+        "commit_date": "2022-06-22T16:07:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "78d13b4c96e0857c1323febcb0cac7d8f5cf5822": {
+        "tag_name": "v2.295.0",
+        "commit_date": "2022-08-10T14:48:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "0f4622653b72625cb6246e106efe2f57211ca79f": {
+        "tag_name": "v2.296.0",
+        "commit_date": "2022-08-23T14:52:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "219852abcb49cb096136f5b0a807e512765647d5": {
+        "tag_name": "v2.296.1",
+        "commit_date": "2022-08-31T17:40:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "21c30edf1e7a80e041649848ea1d91b885a8762e": {
+        "tag_name": "v2.296.2",
+        "commit_date": "2022-09-08T17:38:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "48e9fd1a88c7b2839b56e9a5410a83f8065587a2": {
+        "tag_name": "v2.297.0",
+        "commit_date": "2022-09-26T15:42:31Z",
+        "license_spdx_id": "MIT"
+      },
+      "3b8cfdae4e37ae361f8f54f53ca98a2382f1f4d5": {
+        "tag_name": "v2.298.0",
+        "commit_date": "2022-10-04T12:18:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "c577be6e62a890820c12ce018fad85f9e6aaf29a": {
+        "tag_name": "v2.298.1",
+        "commit_date": "2022-10-04T15:28:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "f49f0247c8f15ef51086a7c2405333cb91c6f3cd": {
+        "tag_name": "v2.298.2",
+        "commit_date": "2022-10-04T16:44:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "c0d21101a339523610fa1b9d5f5ecd66bd903112": {
+        "tag_name": "v2.299.0",
+        "commit_date": "2022-11-02T18:56:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "2e44f985bd9bf890dc061e654f6a850c6f1249cf": {
+        "tag_name": "v2.299.1",
+        "commit_date": "2022-11-02T23:59:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "b3e56206cfa5e0f052437048654d858ee9e69a60": {
+        "tag_name": "v2.300.0",
+        "commit_date": "2022-12-14T08:43:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "edb3681cccaf243ba63efbf78bae69e4d293d3b5": {
+        "tag_name": "v2.300.1",
+        "commit_date": "2022-12-19T16:16:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "5b39316bae9c5831bd23ae25cd63bf903488a9d0": {
+        "tag_name": "v2.300.2",
+        "commit_date": "2022-12-19T19:20:13Z",
+        "license_spdx_id": "MIT"
+      }
+    },
+    "tags": {
+      "sample": {
+        "commit_hash": "82e9857d4fc2cb788b39238f781d74fa68e821ed",
+        "commit_date": "2019-10-25T14:38:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.159.0": {
+        "commit_hash": "c8afc848403652f31f84eb362fc0696ee23cffca",
+        "commit_date": "2019-10-10T04:52:42Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.159.1": {
+        "commit_hash": "05f0b938ace187ceaf243179a374f7e2fddb7103",
+        "commit_date": "2019-10-17T21:05:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.159.2": {
+        "commit_hash": "7b158fff05ec016aaaf492e8db93b5cffb2c73c8",
+        "commit_date": "2019-10-22T17:41:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.160.0": {
+        "commit_hash": "1413297394f94a1b768bda66254fc658b4a04591",
+        "commit_date": "2019-10-28T17:44:09Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.160.1": {
+        "commit_hash": "2247f2e3ea0fc37ebcaf58b74756a955944e6a7d",
+        "commit_date": "2019-11-05T20:43:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.160.2": {
+        "commit_hash": "8e4c7c9f9092e4ba1874e214c9c40a106eb5f8f0",
+        "commit_date": "2019-11-08T16:01:27Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.161.0": {
+        "commit_hash": "3ade8424a5ef383363b7c8decfef2280d0dedb97",
+        "commit_date": "2019-11-12T16:36:25Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.162.0": {
+        "commit_hash": "b061ec410f2ec3a3e15f5ea6e6cd15c1653624a1",
+        "commit_date": "2019-12-02T21:54:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.163.0": {
+        "commit_hash": "9bbbca9e5d361955c609ef7b3a46350712f3e618",
+        "commit_date": "2019-12-12T20:20:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.163.1": {
+        "commit_hash": "b15230f7a1f631ecfce58207b9a9c733fa01503f",
+        "commit_date": "2019-12-18T00:19:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.164.0": {
+        "commit_hash": "40302373bad75bbea2d0a47c21788387bf8f483f",
+        "commit_date": "2019-12-18T20:39:26Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.165.0": {
+        "commit_hash": "a3c2479a298682bf48b7ca535707728e6f945733",
+        "commit_date": "2020-01-28T03:14:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.165.1": {
+        "commit_hash": "a0a590fb48fa2db92dacdef5d9b94294ab7940b4",
+        "commit_date": "2020-01-31T03:14:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.165.2": {
+        "commit_hash": "745b90a8b27fe9e2d13ec08a17890597a7582899",
+        "commit_date": "2020-02-12T19:26:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.168.0": {
+        "commit_hash": "9fc0686dc26c62ada68c9630c941055af21e050e",
+        "commit_date": "2020-03-24T20:25:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.169.0": {
+        "commit_hash": "7817e1a97608d0a326b6c98d1157a67eba49603b",
+        "commit_date": "2020-04-08T15:32:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.169.1": {
+        "commit_hash": "c126b52fe5bb86c38032439abc64ae790bb01f38",
+        "commit_date": "2020-04-14T18:36:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.262.0": {
+        "commit_hash": "7a6523602242d4a7cdaea81f09010fddf1f3999f",
+        "commit_date": "2020-05-11T19:05:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.262.1": {
+        "commit_hash": "cd8e4ddba19f79874650ec54ba786c51d771f54e",
+        "commit_date": "2020-05-12T20:09:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.263.0": {
+        "commit_hash": "11435857e4cd9795fa5ee68c20b674e5f96052ab",
+        "commit_date": "2020-05-21T19:49:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.267.0": {
+        "commit_hash": "c776861f077c34ba2b755ecf9dc7aca88586e856",
+        "commit_date": "2020-06-23T18:20:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.267.1": {
+        "commit_hash": "fd3c9de49d3894943c54c08c92eba9f4e2b43f79",
+        "commit_date": "2020-07-01T02:19:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.272.0": {
+        "commit_hash": "ae543d59756d8440d9b450f3ca74ada6a1b8aefc",
+        "commit_date": "2020-07-29T19:32:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.0": {
+        "commit_hash": "1d68b0448c8b517e82c7eebbc4f226e6ed088e3d",
+        "commit_date": "2020-08-19T14:47:07Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.1": {
+        "commit_hash": "476640fd51b8d3a7c1b1ebbdd2ca1249afd66d52",
+        "commit_date": "2020-09-08T17:32:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.2": {
+        "commit_hash": "b75246e0fe35f83d6b586476b387822146b42fd6",
+        "commit_date": "2020-09-14T18:10:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.3": {
+        "commit_hash": "c5904d5da895e4a803d7e0f61674afed49d92a7a",
+        "commit_date": "2020-09-16T15:23:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.4": {
+        "commit_hash": "24845a5a01cd29ddf6038c8c5bfd1b91552fb685",
+        "commit_date": "2020-09-17T18:13:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.5": {
+        "commit_hash": "a79bab4b3c993a205a2d73d2b618299d8a96bd26",
+        "commit_date": "2020-10-02T15:59:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.273.6": {
+        "commit_hash": "ad745669526010737d2ac2dcd10de80732e8390d",
+        "commit_date": "2020-11-02T19:22:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.274.0": {
+        "commit_hash": "dd945096d01fe8716807115d9e0166bacbce7c03",
+        "commit_date": "2020-11-05T15:35:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.274.1": {
+        "commit_hash": "c3219ccd9cc7acedb4996d93c2284e50da5d1f55",
+        "commit_date": "2020-11-09T14:23:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.274.2": {
+        "commit_hash": "9987a8d024a6075cd2357d07c5aec9785126d5a9",
+        "commit_date": "2020-11-16T13:35:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.275.0": {
+        "commit_hash": "0fe3c90573d4f17fa083a0c7ef2c309c64a784d8",
+        "commit_date": "2020-12-14T16:14:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.275.1": {
+        "commit_hash": "de955418e4e8e0c51546a8495d9236f24edc1321",
+        "commit_date": "2020-12-14T21:37:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.276.0": {
+        "commit_hash": "2ee7717774348de7270a4c04ef1c4b4e26477138",
+        "commit_date": "2021-01-15T14:18:37Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.276.1": {
+        "commit_hash": "5effa808be96eae7f2e08d713426b8d056bddff1",
+        "commit_date": "2021-01-21T19:27:46Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.277.0": {
+        "commit_hash": "a0fa09ddccf4320a2aff590060217fadcc88a8d4",
+        "commit_date": "2021-02-09T18:30:46Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.277.1": {
+        "commit_hash": "183a3dd9a0d4d51feddc5fe9fa6c3b5f8b08343d",
+        "commit_date": "2021-02-09T19:48:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.278.0": {
+        "commit_hash": "62d926efce35d3ea16d7624a25aaa5b300737def",
+        "commit_date": "2021-04-16T15:53:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.279.0": {
+        "commit_hash": "6b75179ec79e2041b3b5b4e9206b73db2d206aac",
+        "commit_date": "2021-07-21T15:53:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.280.0": {
+        "commit_hash": "ed15c5389b7c17f5b83cc542f06ee10d8a0a3f5d",
+        "commit_date": "2021-08-03T15:30:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.280.1": {
+        "commit_hash": "4d17f77f5e8d552740a91ce2868fd05ff5a0dfee",
+        "commit_date": "2021-08-04T17:34:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.280.2": {
+        "commit_hash": "ccafb91bfbcee5bed530aa82a1a0381b2c8f260c",
+        "commit_date": "2021-08-12T17:39:28Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.280.3": {
+        "commit_hash": "409920e9f03bd38fe6e58807f069394993ce32e4",
+        "commit_date": "2021-08-19T13:10:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.281.0": {
+        "commit_hash": "b6aa01fabcad04dd03a5e6d6e780fafcd634bbd9",
+        "commit_date": "2021-08-30T17:27:28Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.281.1": {
+        "commit_hash": "c8caf59bb7adaa87c4cf8f61372670d338a13f2d",
+        "commit_date": "2021-09-01T20:29:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.282.0": {
+        "commit_hash": "f954835f54cf0e699c5284f86238b6c4173eda4e",
+        "commit_date": "2021-09-13T18:12:48Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.282.1": {
+        "commit_hash": "f9ce10da6d3868467df742575df29fadd334e856",
+        "commit_date": "2021-09-15T18:00:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.283.0": {
+        "commit_hash": "b03ca604ff702877ec49cfd3f06285d3e8d95400",
+        "commit_date": "2021-09-20T13:15:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.283.1": {
+        "commit_hash": "e6baf0d2755bc747d0eb58f24941e273d16c6524",
+        "commit_date": "2021-09-20T14:02:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.283.2": {
+        "commit_hash": "4d908df4b2d8c51e079fac1c50bb8275645d06ad",
+        "commit_date": "2021-09-30T12:58:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.283.3": {
+        "commit_hash": "844595b1b3f2b73aa4aa94025326fc0a8c0ca780",
+        "commit_date": "2021-10-04T19:10:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.283.4": {
+        "commit_hash": "436989949b1b66b7a57bf4f6e6acbc854d329e5e",
+        "commit_date": "2022-09-20T18:23:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.284.0": {
+        "commit_hash": "9027c154d05776c16f6df6c0345bc9ec20440ebe",
+        "commit_date": "2021-11-01T15:32:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.285.0": {
+        "commit_hash": "c75a77df668b81fa8d517fda2bb20b4f96dd9d6e",
+        "commit_date": "2021-11-29T16:22:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.285.1": {
+        "commit_hash": "50afba61b40932c1084e31b5e9e7f5af325cc2ac",
+        "commit_date": "2021-12-06T16:54:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.285.2": {
+        "commit_hash": "7f6b9e55d60c0d67df28819138b563be4ead83f9",
+        "commit_date": "2022-09-20T18:22:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.286.0": {
+        "commit_hash": "f1ddeb0d06bdbe3182a4f01c44ef622ec0c13437",
+        "commit_date": "2021-12-21T15:51:03Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.286.1": {
+        "commit_hash": "f4a2c808ebfde6798803139c41783fe2bf18a9a8",
+        "commit_date": "2022-01-14T17:03:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.287.0": {
+        "commit_hash": "444f05427875e5404126199b7feb76a8da409414",
+        "commit_date": "2022-01-27T16:37:58Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.287.1": {
+        "commit_hash": "b4e17c4fee3674494ffe88c5e06e42acb6788a37",
+        "commit_date": "2022-01-27T21:01:31Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.288.0": {
+        "commit_hash": "d6af5b2955b4f6e4af64b5caeb175decdb38c098",
+        "commit_date": "2022-02-25T21:43:45Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.288.1": {
+        "commit_hash": "e95a2b840b74568ec30c993462165ece91040f8e",
+        "commit_date": "2022-02-28T19:07:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.289.0": {
+        "commit_hash": "bc0c1263f0b74e8ce647931c9a288aa850dff009",
+        "commit_date": "2022-03-18T15:33:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.289.1": {
+        "commit_hash": "b3b97b73282e89e1d3247a54156e5dca39a57a45",
+        "commit_date": "2022-03-18T18:36:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.289.2": {
+        "commit_hash": "529e404063bef464e93475d93affe93f97080dd1",
+        "commit_date": "2022-03-30T14:25:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.289.3": {
+        "commit_hash": "b96b3c58c771e1b1fc97e027f7f9e405d89a1ac0",
+        "commit_date": "2022-04-19T20:30:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.289.4": {
+        "commit_hash": "3c64f263211f021532a212db171229415cb0f074",
+        "commit_date": "2022-09-20T18:22:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.290.0": {
+        "commit_hash": "d95bfc5d1f73b82e16c2700d9dad2bd0fb3401ca",
+        "commit_date": "2022-04-12T14:50:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.290.1": {
+        "commit_hash": "b86ce4874592d0ec108506e8fa826ecda1c598c6",
+        "commit_date": "2022-04-14T14:38:43Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.291.0": {
+        "commit_hash": "dac4363206d060d98c5ba98c0fe76d81004c03e9",
+        "commit_date": "2022-04-29T11:53:22Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.291.1": {
+        "commit_hash": "496ec0df97891bd8e50f4431d01874ac3ab75a93",
+        "commit_date": "2022-04-29T14:55:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.292.0": {
+        "commit_hash": "d4b794dd645e16990ae0530bf977e26ab24be9d9",
+        "commit_date": "2022-05-23T15:15:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.293.0": {
+        "commit_hash": "7785d8e1045339fbc88b92c9b506d35ed2b7523c",
+        "commit_date": "2022-06-10T13:57:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.293.1": {
+        "commit_hash": "a78e6e059486e73821fccb510b081aceac64cf86",
+        "commit_date": "2022-09-20T16:40:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.294.0": {
+        "commit_hash": "709bd6113d2fca3a89a0fef11913ce4efd7b8cc5",
+        "commit_date": "2022-06-22T16:07:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.295.0": {
+        "commit_hash": "78d13b4c96e0857c1323febcb0cac7d8f5cf5822",
+        "commit_date": "2022-08-10T14:48:40Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.296.0": {
+        "commit_hash": "0f4622653b72625cb6246e106efe2f57211ca79f",
+        "commit_date": "2022-08-23T14:52:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.296.1": {
+        "commit_hash": "219852abcb49cb096136f5b0a807e512765647d5",
+        "commit_date": "2022-08-31T17:40:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.296.2": {
+        "commit_hash": "21c30edf1e7a80e041649848ea1d91b885a8762e",
+        "commit_date": "2022-09-08T17:38:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.297.0": {
+        "commit_hash": "48e9fd1a88c7b2839b56e9a5410a83f8065587a2",
+        "commit_date": "2022-09-26T15:42:31Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.298.0": {
+        "commit_hash": "3b8cfdae4e37ae361f8f54f53ca98a2382f1f4d5",
+        "commit_date": "2022-10-04T12:18:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.298.1": {
+        "commit_hash": "c577be6e62a890820c12ce018fad85f9e6aaf29a",
+        "commit_date": "2022-10-04T15:28:24Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.298.2": {
+        "commit_hash": "f49f0247c8f15ef51086a7c2405333cb91c6f3cd",
+        "commit_date": "2022-10-04T16:44:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.299.0": {
+        "commit_hash": "c0d21101a339523610fa1b9d5f5ecd66bd903112",
+        "commit_date": "2022-11-02T18:56:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.299.1": {
+        "commit_hash": "2e44f985bd9bf890dc061e654f6a850c6f1249cf",
+        "commit_date": "2022-11-02T23:59:20Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.300.0": {
+        "commit_hash": "b3e56206cfa5e0f052437048654d858ee9e69a60",
+        "commit_date": "2022-12-14T08:43:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.300.1": {
+        "commit_hash": "edb3681cccaf243ba63efbf78bae69e4d293d3b5",
+        "commit_date": "2022-12-19T16:16:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.300.2": {
+        "commit_hash": "5b39316bae9c5831bd23ae25cd63bf903488a9d0",
+        "commit_date": "2022-12-19T19:20:13Z",
+        "license_spdx_id": "MIT"
+      }
+    }
+  },
+  "kartverket/github-workflows": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2022-39326",
+        "status": "fixed in 2.7.5",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\n_What kind of vulnerability is it? Who is impacted?_  \nAll users of the `run-terraform` reusable workflow from the kartverket/github-workflows repo are affected. A malicious actor could potentially send a PR with a malicious payload leading to execution of arbitrary JavaScript code in the context of the workflow.\n\n### Patches\n_Has the problem been patched? What versions should users upgrade to?_  \nUpgrade to at least 2.7.5 to resolve the issue.\n\n### Workarounds\n_Is there a way for users to fix or remediate the vulnerability without upgrading?_  \nUntil you are able to upgrade, make sure to review any PRs from exernal users for malicious payloads before allowing them to trigger a build.\n\n### For more information\nIf you have any questions or comments about this advisory:\n* Open an issue in [kartverket/github-workflows](https://github.com/kartverket/github-workflows)\n",
+        "severity": "HIGH",
+        "packageName": "kartverket/github-workflows",
+        "link": "https://github.com/advisories/GHSA-f9qj-7gh3-mhj4",
+        "riskFactors": [],
+        "impactedVersions": "< 2.7.5",
+        "publishedDate": "2022-10-19T18:54:28Z",
+        "discoveredDate": "2022-10-19T18:54:28Z",
+        "fixDate": "2022-10-24T06:14:03Z",
+        "fixedVersion": "2.7.5",
+        "fixedCommitHash": "5906b1a328b3559c8a4c435aaf2c21d195834484"
+      }
+    ],
+    "commit_hashes": {
+      "148dffe42e70cb2ccd95c103a126e858ad8f7ce2": {
+        "tag_name": "v1",
+        "commit_date": "2022-07-11T10:48:18Z",
+        "license_spdx_id": "MIT"
+      },
+      "8f8565809ced10b87b819e5be6f2b7681cb206e8": {
+        "tag_name": "v2",
+        "commit_date": "2022-07-12T13:42:26Z",
+        "license_spdx_id": "MIT"
+      },
+      "09e110928e1e826f4abe821aa80db60a259fecca": {
+        "tag_name": "v2.1",
+        "commit_date": "2022-07-14T12:31:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "7ee0d1ab4cd947be93ba4bceb78074592f77c527": {
+        "tag_name": "v2.2",
+        "commit_date": "2022-07-15T13:10:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "1d97920dca1b01cdece1d466106177b754f9f9f0": {
+        "tag_name": "v2.3",
+        "commit_date": "2022-07-18T11:39:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "76575f5e9e4034c39160b7cd17fdbde6b2da277c": {
+        "tag_name": "v2.4",
+        "commit_date": "2022-08-17T12:41:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "4327cc303e9f5d6239716ad86332511cf829c0fe": {
+        "tag_name": "v2.6",
+        "commit_date": "2022-08-22T07:21:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "d7f19b9ce0d04f0a8d74dcbc067a26a11df3f53d": {
+        "tag_name": "v2.7",
+        "commit_date": "2022-08-23T07:44:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "87373f8200fada6e32e9298b57d132d739e086ce": {
+        "tag_name": "v2.7.1",
+        "commit_date": "2022-08-23T10:56:35Z",
+        "license_spdx_id": "MIT"
+      },
+      "822b7cfadef06873abcb9ef017c34f5ded9bbc34": {
+        "tag_name": "v2.7.2",
+        "commit_date": "2022-08-31T12:31:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "a7a5e25d912ffe4b323d15089dff057b49614a58": {
+        "tag_name": "v2.7.3",
+        "commit_date": "2022-09-14T10:33:29Z",
+        "license_spdx_id": "MIT"
+      },
+      "f1d9eac96bc37a19b81a465ef221f14195a8b974": {
+        "tag_name": "v2.7.4",
+        "commit_date": "2022-10-11T11:18:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "5906b1a328b3559c8a4c435aaf2c21d195834484": {
+        "tag_name": "v2.7.5",
+        "commit_date": "2022-10-24T06:14:03Z",
+        "license_spdx_id": "MIT"
+      },
+      "576fa617697d84354fd6fa46a32308f2a5f374ad": {
+        "tag_name": "v2.7.6",
+        "commit_date": "2022-10-24T07:49:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "2456f40c20f066c29f215410337554d506284d4f": {
+        "tag_name": "v3.0.0",
+        "commit_date": "2022-11-01T12:44:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "ca7854b6eb380cf6a70f7c3622c004c9ee1c603a": {
+        "tag_name": "v3.0.1",
+        "commit_date": "2022-11-02T09:26:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "541cb3f8ffc689f0ffb40f145eab0da253d365c5": {
+        "tag_name": "v3.0.2",
+        "commit_date": "2022-11-11T13:44:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "22cc0b51921e4e2a4b046092eadf16d6b7294835": {
+        "tag_name": "v3.0.3",
+        "commit_date": "2022-11-21T10:56:35Z",
+        "license_spdx_id": "MIT"
+      },
+      "b58c05fcdf07aa036321dca33e310bf12af89f99": {
+        "tag_name": "v3.1.0",
+        "commit_date": "2022-12-08T07:33:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "fdd14b9dde1f1acb59601a5ce629e20a8a1cde59": {
+        "tag_name": "v3.1.1",
+        "commit_date": "2022-12-21T13:18:22Z",
+        "license_spdx_id": "MIT"
+      }
+    },
+    "tags": {
+      "v1": {
+        "commit_hash": "148dffe42e70cb2ccd95c103a126e858ad8f7ce2",
+        "commit_date": "2022-07-11T10:48:18Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2": {
+        "commit_hash": "8f8565809ced10b87b819e5be6f2b7681cb206e8",
+        "commit_date": "2022-07-12T13:42:26Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.1": {
+        "commit_hash": "09e110928e1e826f4abe821aa80db60a259fecca",
+        "commit_date": "2022-07-14T12:31:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.2": {
+        "commit_hash": "7ee0d1ab4cd947be93ba4bceb78074592f77c527",
+        "commit_date": "2022-07-15T13:10:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.3": {
+        "commit_hash": "1d97920dca1b01cdece1d466106177b754f9f9f0",
+        "commit_date": "2022-07-18T11:39:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.4": {
+        "commit_hash": "76575f5e9e4034c39160b7cd17fdbde6b2da277c",
+        "commit_date": "2022-08-17T12:41:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.6": {
+        "commit_hash": "4327cc303e9f5d6239716ad86332511cf829c0fe",
+        "commit_date": "2022-08-22T07:21:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7": {
+        "commit_hash": "d7f19b9ce0d04f0a8d74dcbc067a26a11df3f53d",
+        "commit_date": "2022-08-23T07:44:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.1": {
+        "commit_hash": "87373f8200fada6e32e9298b57d132d739e086ce",
+        "commit_date": "2022-08-23T10:56:35Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.2": {
+        "commit_hash": "822b7cfadef06873abcb9ef017c34f5ded9bbc34",
+        "commit_date": "2022-08-31T12:31:13Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.3": {
+        "commit_hash": "a7a5e25d912ffe4b323d15089dff057b49614a58",
+        "commit_date": "2022-09-14T10:33:29Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.4": {
+        "commit_hash": "f1d9eac96bc37a19b81a465ef221f14195a8b974",
+        "commit_date": "2022-10-11T11:18:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.5": {
+        "commit_hash": "5906b1a328b3559c8a4c435aaf2c21d195834484",
+        "commit_date": "2022-10-24T06:14:03Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.7.6": {
+        "commit_hash": "576fa617697d84354fd6fa46a32308f2a5f374ad",
+        "commit_date": "2022-10-24T07:49:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.0.0": {
+        "commit_hash": "2456f40c20f066c29f215410337554d506284d4f",
+        "commit_date": "2022-11-01T12:44:59Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.0.1": {
+        "commit_hash": "ca7854b6eb380cf6a70f7c3622c004c9ee1c603a",
+        "commit_date": "2022-11-02T09:26:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.0.2": {
+        "commit_hash": "541cb3f8ffc689f0ffb40f145eab0da253d365c5",
+        "commit_date": "2022-11-11T13:44:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.0.3": {
+        "commit_hash": "22cc0b51921e4e2a4b046092eadf16d6b7294835",
+        "commit_date": "2022-11-21T10:56:35Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.1.0": {
+        "commit_hash": "b58c05fcdf07aa036321dca33e310bf12af89f99",
+        "commit_date": "2022-12-08T07:33:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "v3.1.1": {
+        "commit_hash": "fdd14b9dde1f1acb59601a5ce629e20a8a1cde59",
+        "commit_date": "2022-12-21T13:18:22Z",
+        "license_spdx_id": "MIT"
+      }
+    }
+  },
+  "atlassian/gajira-create": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2020-14188",
+        "status": "fixed in 2.0.1",
+        "cvss": 9.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "description": "### Impact\nAn attacker can execute arbitrary code in the context of a GitHub runner by creating a specially crafted GitHub issue.\n\n### Patches\nThis issue is patched in gajira-create version 2.0.1.\n\n### Workarounds\nThere are no known workarounds.\n\n### References\n[GitHub Security Lab advisory GHSL-2020-172](https://securitylab.github.com/advisories/GHSL-2020-172-gajira-create-action)",
+        "severity": "CRITICAL",
+        "packageName": "atlassian/gajira-create",
+        "link": "https://github.com/advisories/GHSA-4xqx-pqpj-9fqw",
+        "riskFactors": [],
+        "impactedVersions": "< 2.0.1",
+        "publishedDate": "2022-10-07T07:20:57Z",
+        "discoveredDate": "2022-10-07T07:20:57Z",
+        "fixDate": "2020-10-20T13:16:08Z",
+        "fixedVersion": "2.0.1",
+        "fixedCommitHash": "c0a9c69ac9d6aa063fed57201e55336ada860183"
+      }
+    ],
+    "commit_hashes": {
+      "f11e88bf4a1358e741ac282bc198a4f21cb719a1": {
+        "tag_name": "v1.0.0",
+        "commit_date": "2019-02-26T16:55:31Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "2cd32e0738e2b31717e7119717fed83e482d2a36": {
+        "tag_name": "v1.0.1",
+        "commit_date": "2019-02-27T10:12:46Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "14c3d657c383981ee595d9750f68d7e4e77d64d0": {
+        "tag_name": "v1.0.3",
+        "commit_date": "2019-02-27T14:48:05Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "77d13eab156b8ad1c08c0655011b8a442c502998": {
+        "tag_name": "v2.0.0",
+        "commit_date": "2019-09-06T18:39:44Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "c0a9c69ac9d6aa063fed57201e55336ada860183": {
+        "tag_name": "v2.0.1",
+        "commit_date": "2020-10-20T13:16:08Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "8219a9bde53e0ec80d7548a05ff92654dae70230": {
+        "tag_name": "v3",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      },
+      "19e3cf975f6c4c4028a6fc5601f238661e11bd00": {
+        "tag_name": "v3.0.0",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      },
+      "ba30723f98eefc82ea65de4a41d8775b55a0a989": {
+        "tag_name": "v3.0.1",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      }
+    },
+    "tags": {
+      "v1.0.0": {
+        "commit_hash": "f11e88bf4a1358e741ac282bc198a4f21cb719a1",
+        "commit_date": "2019-02-26T16:55:31Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v1.0.1": {
+        "commit_hash": "2cd32e0738e2b31717e7119717fed83e482d2a36",
+        "commit_date": "2019-02-27T10:12:46Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v1.0.3": {
+        "commit_hash": "14c3d657c383981ee595d9750f68d7e4e77d64d0",
+        "commit_date": "2019-02-27T14:48:05Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v2.0.0": {
+        "commit_hash": "77d13eab156b8ad1c08c0655011b8a442c502998",
+        "commit_date": "2019-09-06T18:39:44Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v2.0.1": {
+        "commit_hash": "c0a9c69ac9d6aa063fed57201e55336ada860183",
+        "commit_date": "2020-10-20T13:16:08Z",
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v3": {
+        "commit_hash": "8219a9bde53e0ec80d7548a05ff92654dae70230",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v3.0.0": {
+        "commit_hash": "19e3cf975f6c4c4028a6fc5601f238661e11bd00",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      },
+      "v3.0.1": {
+        "commit_hash": "ba30723f98eefc82ea65de4a41d8775b55a0a989",
+        "commit_date": null,
+        "license_spdx_id": "NOASSERTION"
+      }
+    }
+  },
+  "some-natalie/ghas-to-csv": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2022-39217",
+        "status": "fixed in 1",
+        "cvss": 5.8,
+        "vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:C/C:L/I:L/A:L",
+        "description": "### Impact\n\nThis GitHub Action creates a CSV file without sanitizing the output of the APIs.  If an alert is dismissed or any other custom field contains executable code / formulas, it might be run when an endpoint opens that CSV file in a spreadsheet program.  The data flow looks like this \ud83d\udc47\ud83c\udffb \n\n```mermaid\ngraph TD\n    A(Repository) -->|developer dismissal, other data input| B(GitHub Advanced Security data)\n    B -->|ghas-to-csv| C(CSV file)\n    C -->|spreadsheet program| D(endpoint executes potentially malicious code)\n```\n\n### Patches\n\nPlease use version `v1` or later.  That tag moves from using `csv` to `defusedcsv` to mitigate this problem.\n\n### Workarounds\n\nThere is no workaround.  Please upgrade to using the latest tag, `v1` (or later).\n\n### References\n\n* CWE-1236 information from [MITRE](https://cwe.mitre.org/data/definitions/1236.html)\n* CSV injection information from [OWASP](https://owasp.org/www-community/attacks/CSV_Injection)\n* CodeQL query for CWE-1236 in Python [here](https://github.com/github/codeql/tree/main/python/ql/src/experimental/Security/CWE-1236)\n* PyPI site for `defusedcsv` [here](https://pypi.org/project/defusedcsv/)\n\n### For more information\n\nIf you have any questions or comments about this advisory:\n\n* Open an issue in this repository [here](https://github.com/some-natalie/ghas-to-csv/issues)\n",
+        "severity": "MODERATE",
+        "packageName": "some-natalie/ghas-to-csv",
+        "link": "https://github.com/advisories/GHSA-634p-93h9-92vh",
+        "riskFactors": [],
+        "impactedVersions": "< 1",
+        "publishedDate": "2022-09-16T22:06:55Z",
+        "discoveredDate": "2022-09-16T22:06:55Z",
+        "fixDate": "2022-09-07T14:47:32Z",
+        "fixedVersion": "1",
+        "fixedCommitHash": "d0b521928fa734513b5cd9c7d9d8e09db50e884a"
+      }
+    ],
+    "commit_hashes": {
+      "80132621ed3954597fe0430ea1a19368c4694ed1": {
+        "tag_name": "v0.1.0",
+        "commit_date": "2022-04-11T16:41:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "4b54820dfd184c30e04d86911f9a915ae2b94428": {
+        "tag_name": "v0.1.1",
+        "commit_date": "2022-04-11T17:34:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "2b1b5b3900faf3e0197d2fd459a387f310b0ba94": {
+        "tag_name": "v0.2.0",
+        "commit_date": "2022-04-14T15:35:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "bc9ffe24a3151d94799515ac741a9bf01a5e3c2c": {
+        "tag_name": "v0.3.0",
+        "commit_date": "2022-05-10T02:45:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "834b4ead3b2683fd70866b44e77fcc5a8a83d608": {
+        "tag_name": "v0.4.0",
+        "commit_date": "2022-06-30T14:51:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "b04e2875f4fec48e10ad6ed2cae494a0f0d7358b": {
+        "tag_name": "v0.5.0",
+        "commit_date": "2022-07-27T13:42:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "d0b521928fa734513b5cd9c7d9d8e09db50e884a": {
+        "tag_name": "v1",
+        "commit_date": "2022-09-07T14:47:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "3dc93f177ef97ce1623129977dc568589529a318": {
+        "tag_name": "v2.1.0",
+        "commit_date": "2023-01-03T15:35:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "bb178d2de54771e6f9332a2b1d55546cf2bc3e08": {
+        "tag_name": "v2.0.0",
+        "commit_date": "2022-09-23T20:58:06Z",
+        "license_spdx_id": "MIT"
+      }
+    },
+    "tags": {
+      "v0.1.0": {
+        "commit_hash": "80132621ed3954597fe0430ea1a19368c4694ed1",
+        "commit_date": "2022-04-11T16:41:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.1.1": {
+        "commit_hash": "4b54820dfd184c30e04d86911f9a915ae2b94428",
+        "commit_date": "2022-04-11T17:34:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.2.0": {
+        "commit_hash": "2b1b5b3900faf3e0197d2fd459a387f310b0ba94",
+        "commit_date": "2022-04-14T15:35:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.3.0": {
+        "commit_hash": "bc9ffe24a3151d94799515ac741a9bf01a5e3c2c",
+        "commit_date": "2022-05-10T02:45:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.4.0": {
+        "commit_hash": "834b4ead3b2683fd70866b44e77fcc5a8a83d608",
+        "commit_date": "2022-06-30T14:51:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.5.0": {
+        "commit_hash": "b04e2875f4fec48e10ad6ed2cae494a0f0d7358b",
+        "commit_date": "2022-07-27T13:42:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "v1": {
+        "commit_hash": "d0b521928fa734513b5cd9c7d9d8e09db50e884a",
+        "commit_date": "2022-09-07T14:47:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2": {
+        "commit_hash": "3dc93f177ef97ce1623129977dc568589529a318",
+        "commit_date": "2023-01-03T15:35:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.0.0": {
+        "commit_hash": "bb178d2de54771e6f9332a2b1d55546cf2bc3e08",
+        "commit_date": "2022-09-23T20:58:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.1.0": {
+        "commit_hash": "3dc93f177ef97ce1623129977dc568589529a318",
+        "commit_date": "2023-01-03T15:35:10Z",
+        "license_spdx_id": "MIT"
+      }
+    }
+  },
+  "hashicorp/vault-action": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2021-32074",
+        "status": "fixed in 2.2.0",
+        "cvss": 7.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N",
+        "description": "HashiCorp vault-action (aka Vault GitHub Action) before 2.2.0 allows attackers to obtain sensitive information from log files because a multi-line secret was not correctly registered with GitHub Actions for log masking.\n\nThe vault-action implementation did not correctly handle the marking of multi-line variables. As a result, multi-line secrets were not correctly masked in vault-action output.\n\nRemediation:\nCustomers using vault-action should evaluate the risk associated with this issue, and consider upgrading to vault-action 2.2.0 or newer. Please refer to https://github.com/marketplace/actions/vault-secrets for more information.",
+        "severity": "HIGH",
+        "packageName": "hashicorp/vault-action",
+        "link": "https://github.com/advisories/GHSA-4mgv-m5cm-f9h7",
+        "riskFactors": [],
+        "impactedVersions": "< 2.2.0",
+        "publishedDate": "2022-05-24T19:01:50Z",
+        "discoveredDate": "2022-05-24T19:01:50Z",
+        "fixDate": "2021-05-06T17:51:05Z",
+        "fixedVersion": "2.2.0",
+        "fixedCommitHash": "0723fd73487d69ce18331684dafdaafa180a5ea1"
+      }
+    ],
+    "commit_hashes": {
+      "19c0b21a1ddb75543178ac4a250b5b7cff7fd55a": {
+        "tag_name": "v0.1.0",
+        "commit_date": "2019-09-20T22:56:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "6784ab38963b266384880094ff02eb13334802f4": {
+        "tag_name": "v0.2.1",
+        "commit_date": "2019-09-20T23:33:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "da9a93f3f5bec24febf304139a6cbe61f0f8ad5e": {
+        "tag_name": "v0.2.2",
+        "commit_date": "2019-10-15T19:00:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "3747195c5f2848179bf615690b3e66e69a5e4dc7": {
+        "tag_name": "v0.3.0",
+        "commit_date": "2019-11-24T21:21:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "ab4dc55b2ecc6eb5926c5caffa45eaf0c3ad735a": {
+        "tag_name": "v0.3.1",
+        "commit_date": "2020-01-09T16:31:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "3b9239de79207bf3fba80a16916f257918ab1d15": {
+        "tag_name": "v0.4.0",
+        "commit_date": "2020-01-29T01:10:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "f229481670b4719a05f01e8fd8478c191a373c43": {
+        "tag_name": "v0.5.0",
+        "commit_date": "2020-02-04T15:40:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "0188d9d223dac8b24b94b04d3253bf0fe0365ca7": {
+        "tag_name": "v0.6.0",
+        "commit_date": "2020-02-05T22:33:12Z",
+        "license_spdx_id": "MIT"
+      },
+      "f9753d75ef0cdafe621cda2323b5dcc4d673d01a": {
+        "tag_name": "v0.6.1",
+        "commit_date": "2020-02-20T07:45:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "7d1d7d26adb265e6ebc6018ce2b92be7c5a7c63c": {
+        "tag_name": "v0.6.2",
+        "commit_date": "2020-02-20T07:48:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "4edbc9a77a84bd34b0da2e8b8d527871b6103aae": {
+        "tag_name": "v0.7.0",
+        "commit_date": "2020-02-20T17:38:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "4ab6f6070f5be6702101c9736961beb8105e8708": {
+        "tag_name": "v0.8.0",
+        "commit_date": "2020-03-11T19:02:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "50ece41861b565239528923369690fc43cc0050b": {
+        "tag_name": "v0.9.0",
+        "commit_date": "2020-03-31T17:20:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "5c464962be8937589f883cf209d21b3982c92360": {
+        "tag_name": "v0.10.0",
+        "commit_date": "2020-04-04T18:19:48Z",
+        "license_spdx_id": "MIT"
+      },
+      "567ec72c33597ee9feca8bed4611a8ace38330c2": {
+        "tag_name": "v0.10.1",
+        "commit_date": "2020-04-07T17:09:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "9878eba70ad6c6e21a01bd1e2debd3f3b7cbc46e": {
+        "tag_name": "v0.10.2",
+        "commit_date": "2020-04-07T17:16:27Z",
+        "license_spdx_id": "MIT"
+      },
+      "727494f451d57cbfc932a1d8bce1b0a027d99a8b": {
+        "tag_name": "v1.0.0",
+        "commit_date": "2020-04-12T05:00:18Z",
+        "license_spdx_id": "MIT"
+      },
+      "22e3f3e09e3baba4d6cc62823175d21fafe4e30a": {
+        "tag_name": "v1.0.1",
+        "commit_date": "2020-04-12T05:10:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "8fa61e909919a3f94952e9e07ace6b5a1114440b": {
+        "tag_name": "v2.4.3",
+        "commit_date": "2022-11-08T23:23:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "e27b45646f82a319c8157e545e24b7588510a397": {
+        "tag_name": "v2.0.0",
+        "commit_date": "2020-08-24T23:22:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "952d5d48e4448ad364651cc473aeccc25bd169d9": {
+        "tag_name": "v2.0.1",
+        "commit_date": "2020-09-15T18:58:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "2ca76a4465bca4f71fc88320e67551a287f7eaec": {
+        "tag_name": "v2.1.0",
+        "commit_date": "2020-10-06T17:18:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "2fb78ab91e55be5479aacf74f7b451eab79773a4": {
+        "tag_name": "v2.1.1",
+        "commit_date": "2020-12-15T16:55:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "5e5c06a3c8e96b7c4757fe7a10e03469cdbd07bb": {
+        "tag_name": "v2.1.2",
+        "commit_date": "2021-01-21T19:45:22Z",
+        "license_spdx_id": "MIT"
+      },
+      "0723fd73487d69ce18331684dafdaafa180a5ea1": {
+        "tag_name": "v2.2.0",
+        "commit_date": "2021-05-06T17:51:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "0451f06f9f705768363122da079f46746e31bfe4": {
+        "tag_name": "v2.3.0",
+        "commit_date": "2021-06-23T21:03:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "d5a69ceca1c3867700c32135c0da4788efdd2c0e": {
+        "tag_name": "v2.3.1",
+        "commit_date": "2021-08-23T15:36:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "61dd38f4918626fea0c45016a508893e5c045210": {
+        "tag_name": "v2.4.0",
+        "commit_date": "2021-10-21T18:14:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "95109f31616a55cb6f4c56053def7d526677cc13": {
+        "tag_name": "v2.4.1",
+        "commit_date": null,
+        "license_spdx_id": "MIT"
+      },
+      "7d98524254c38dc6892804f991526ff30905f643": {
+        "tag_name": "v2.4.2",
+        "commit_date": "2022-08-15T18:56:52Z",
+        "license_spdx_id": "MIT"
+      }
+    },
+    "tags": {
+      "v0.1.0": {
+        "commit_hash": "19c0b21a1ddb75543178ac4a250b5b7cff7fd55a",
+        "commit_date": "2019-09-20T22:56:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.2.0": {
+        "commit_hash": "6784ab38963b266384880094ff02eb13334802f4",
+        "commit_date": "2019-09-20T23:33:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.2.1": {
+        "commit_hash": "6784ab38963b266384880094ff02eb13334802f4",
+        "commit_date": "2019-09-20T23:33:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.2.2": {
+        "commit_hash": "da9a93f3f5bec24febf304139a6cbe61f0f8ad5e",
+        "commit_date": "2019-10-15T19:00:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.3.0": {
+        "commit_hash": "3747195c5f2848179bf615690b3e66e69a5e4dc7",
+        "commit_date": "2019-11-24T21:21:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.3.1": {
+        "commit_hash": "ab4dc55b2ecc6eb5926c5caffa45eaf0c3ad735a",
+        "commit_date": "2020-01-09T16:31:15Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.4.0": {
+        "commit_hash": "3b9239de79207bf3fba80a16916f257918ab1d15",
+        "commit_date": "2020-01-29T01:10:19Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.5.0": {
+        "commit_hash": "f229481670b4719a05f01e8fd8478c191a373c43",
+        "commit_date": "2020-02-04T15:40:55Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.6.0": {
+        "commit_hash": "0188d9d223dac8b24b94b04d3253bf0fe0365ca7",
+        "commit_date": "2020-02-05T22:33:12Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.6.1": {
+        "commit_hash": "f9753d75ef0cdafe621cda2323b5dcc4d673d01a",
+        "commit_date": "2020-02-20T07:45:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.6.2": {
+        "commit_hash": "7d1d7d26adb265e6ebc6018ce2b92be7c5a7c63c",
+        "commit_date": "2020-02-20T07:48:49Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.7.0": {
+        "commit_hash": "4edbc9a77a84bd34b0da2e8b8d527871b6103aae",
+        "commit_date": "2020-02-20T17:38:11Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.8.0": {
+        "commit_hash": "4ab6f6070f5be6702101c9736961beb8105e8708",
+        "commit_date": "2020-03-11T19:02:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.9.0": {
+        "commit_hash": "50ece41861b565239528923369690fc43cc0050b",
+        "commit_date": "2020-03-31T17:20:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.10.0": {
+        "commit_hash": "5c464962be8937589f883cf209d21b3982c92360",
+        "commit_date": "2020-04-04T18:19:48Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.10.1": {
+        "commit_hash": "567ec72c33597ee9feca8bed4611a8ace38330c2",
+        "commit_date": "2020-04-07T17:09:06Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.10.2": {
+        "commit_hash": "9878eba70ad6c6e21a01bd1e2debd3f3b7cbc46e",
+        "commit_date": "2020-04-07T17:16:27Z",
+        "license_spdx_id": "MIT"
+      },
+      "v1.0.0": {
+        "commit_hash": "727494f451d57cbfc932a1d8bce1b0a027d99a8b",
+        "commit_date": "2020-04-12T05:00:18Z",
+        "license_spdx_id": "MIT"
+      },
+      "v1.0.1": {
+        "commit_hash": "22e3f3e09e3baba4d6cc62823175d21fafe4e30a",
+        "commit_date": "2020-04-12T05:10:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2": {
+        "commit_hash": "8fa61e909919a3f94952e9e07ace6b5a1114440b",
+        "commit_date": "2022-11-08T23:23:50Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.0.0": {
+        "commit_hash": "e27b45646f82a319c8157e545e24b7588510a397",
+        "commit_date": "2020-08-24T23:22:08Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.0.1": {
+        "commit_hash": "952d5d48e4448ad364651cc473aeccc25bd169d9",
+        "commit_date": "2020-09-15T18:58:16Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.1.0": {
+        "commit_hash": "2ca76a4465bca4f71fc88320e67551a287f7eaec",
+        "commit_date": "2020-10-06T17:18:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.1.1": {
+        "commit_hash": "2fb78ab91e55be5479aacf74f7b451eab79773a4",
+        "commit_date": "2020-12-15T16:55:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.1.2": {
+        "commit_hash": "5e5c06a3c8e96b7c4757fe7a10e03469cdbd07bb",
+        "commit_date": "2021-01-21T19:45:22Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.2.0": {
+        "commit_hash": "0723fd73487d69ce18331684dafdaafa180a5ea1",
+        "commit_date": "2021-05-06T17:51:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.3.0": {
+        "commit_hash": "0451f06f9f705768363122da079f46746e31bfe4",
+        "commit_date": "2021-06-23T21:03:57Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.3.1": {
+        "commit_hash": "d5a69ceca1c3867700c32135c0da4788efdd2c0e",
+        "commit_date": "2021-08-23T15:36:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.4.0": {
+        "commit_hash": "61dd38f4918626fea0c45016a508893e5c045210",
+        "commit_date": "2021-10-21T18:14:14Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.4.1": {
+        "commit_hash": "95109f31616a55cb6f4c56053def7d526677cc13",
+        "commit_date": null,
+        "license_spdx_id": "MIT"
+      },
+      "v2.4.2": {
+        "commit_hash": "7d98524254c38dc6892804f991526ff30905f643",
+        "commit_date": "2022-08-15T18:56:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "v2.4.3": {
+        "commit_hash": "8fa61e909919a3f94952e9e07ace6b5a1114440b",
+        "commit_date": "2022-11-08T23:23:50Z",
+        "license_spdx_id": "MIT"
+      }
+    }
+  },
+  "check-spelling/check-spelling": {
+    "vulnerabilities": [
+      {
+        "id": "CVE-2021-32724",
+        "status": "fixed in 0.0.19",
+        "cvss": 9.6,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:N",
+        "description": "### Impact\nFor a repository with the [check-spelling action](https://github.com/marketplace/actions/check-spelling) enabled that triggers on `pull_request_target` (or `schedule`), an attacker can send a crafted Pull Request that causes a `GITHUB_TOKEN` to be exposed.\n\nWith the `GITHUB_TOKEN`, it's possible to push commits to the repository bypassing standard approval processes. Commits to the repository could then steal any/all secrets available to the repository.\n\n### Workarounds\n\nYou can either:\n* [Disable the workflow](https://docs.github.com/en/actions/managing-workflow-runs/disabling-and-enabling-a-workflow) until you've fixed **all branches**.  \n\nor\n* Set repository to [Allow specific actions](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/disabling-or-limiting-github-actions-for-a-repository#allowing-specific-actions-to-run). You can check: \n   - [x] `Allow actions created by GitHub`\n   - [x] `Allow Marketplace actions by verified creators`\n\n[check-spelling](https://github.com/check-spelling) isn't a verified creator and it certainly won't be anytime soon. You could then explicitly add other actions that your repository uses.\n\nor\n* Set repository [Workflow permissions](https://docs.github.com/en/github/administering-a-repository/managing-repository-settings/disabling-or-limiting-github-actions-for-a-repository#setting-the-permissions-of-the-github_token-for-your-repository) to `Read repository contents permission`.\n\n### Solution\n\nWorkflows using `check-spelling/check-spelling@main` were fixed automatically with the release of [v0.0.19](https://github.com/check-spelling/check-spelling/releases/tag/v0.0.19).\n\nWorkflows using a pinned sha or tagged version will need to change the affected workflows for *all* repository branches to the latest version.\n\n#### The simple case\n\nIn the simple case, you have few enough open branches that you can do the following on **all branches**.\n\n- Edit the workflow to use `check-spelling/check-spelling@main`, or\n- Edit the workflow to use `check-spelling/check-spelling@v0.0.19`, or\n- Delete the workflow file, or\n- Change the workflow to only use `on: push`\n  - this will result in PRs losing status checks (commits will still have statuses)\n\n#### The complex case\n\nIf you have too many open branches to feasibly fix all of them as per the above, you can instead do the following:\n\n1. Perform the above solution on all open branches for which you need `check-spelling` to be active.\n2. On all open branches on which you need `check-spelling` to be active, rename the workflow file (e.g. to `spelling2.yml`)\n3. On the default branch, create a dummy workflow file with the old name (this is usually `spelling.yml`).\n4. Use the GitHub Actions UI to disable the workflow with the old name (this is usually `spelling.yml`).\n\nThis should prevent the vulnerable workflow from executing on any branches that you have not applied the proper solution to.\n\nThe reason for creating the dummy file (Step 3) before disabling the workflow (Step 4) is that, in our testing, GitHub may un-disable a workflow if it does not exist on your default branch.\n\nExample dummy workflow file (For step 3):\n\n```yml\n# spelling.yml is disabled per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-g86g-chm8-7r2p\nname: Workflow should not run!\non:\n  push:\n    branches: ''\n\njobs:\n  placeholder:\n    name: Should be disabled\n    runs-on: ubuntu-latest\n    if: false\n    steps:\n    - name: Task\n      run: |\n        echo 'Running this task would be bad'\n        exit 1\n```\n\nYou *should also* include a comment in the new workflow to remind people not to resurrect the old name, for example:\n\n```yml\n# spelling.yml is disabled per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-g86g-chm8-7r2p\n```\n\nFinally, you should consider sending a Pull Request to an open branch in which you have not performed the proper solution to verify that the old version of `check-spelling` does not execute.\n\n#### How to upgrade\n\nPerform this change to your impacted workflow file (typically `.github/workflows/spelling.yml`):\n```diff\n@@ -24 +24 @@\n-    - uses: check-spelling/check-spelling@v0.0.18\n+    - uses: check-spelling/check-spelling@v0.0.19\n```\n\nAs noted above, if you have many branches, you should additionally rename the workflow and include a comment to remind people not to use the old workflow file name:\n```\n# spelling.yml is blocked per https://github.com/check-spelling/check-spelling/security/advisories/GHSA-g86g-chm8-7r2p\n```\n\n### Reviewing workflow runs\n\nUsers can verify who and which Pull Requests have been running the action by looking up the spelling.yml action in the Actions tab of their repositories, e.g., https://github.com/check-spelling/check-spelling/actions/workflows/spelling.yml - you can filter PRs by adding `?query=event%3Apull_request_target`, e.g., https://github.com/check-spelling/check-spelling/actions/workflows/spelling.yml?query=event%3Apull_request_target.\n\n\n### References\n\n* For more information on `pull_request_target` attacks, see [GitHub Security Lab: Keeping your GitHub Actions and workflows secure: Preventing pwn requests](https://securitylab.github.com/research/github-actions-preventing-pwn-requests/)\n* For information on workflow hardening techniques, see [GitHub: Security hardening for GitHub Actions](https://docs.github.com/en/actions/learn-github-actions/security-hardening-for-github-actions)\n\n### Credit\nThanks to [@justinsteven](https://twitter.com/justinsteven) for reporting as well as in helping validate the fix.\n\n### For more information\n\nFor questions or comments about this advisory:\n* Email us at [check-spelling@check-spelling.dev](mailto:check-spelling@check-spelling.dev)",
+        "severity": "CRITICAL",
+        "packageName": "check-spelling/check-spelling",
+        "link": "https://github.com/advisories/GHSA-g86g-chm8-7r2p",
+        "riskFactors": [],
+        "impactedVersions": "< 0.0.19",
+        "publishedDate": "2022-07-29T19:56:34Z",
+        "discoveredDate": "2022-07-29T19:56:34Z",
+        "fixDate": "2021-07-12T19:37:53Z",
+        "fixedVersion": "0.0.19",
+        "fixedCommitHash": "436362fc6b588d9d561cbdb575260ca593c8dc56"
+      }
+    ],
+    "commit_hashes": {
+      "d2d0ee06c72600982d2f80bca187ce90fee6ad94": {
+        "tag_name": "0.0.1-alpha",
+        "commit_date": "2020-02-14T06:56:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "8e32de8a016bc4dce4170ec36881cbb315f94ff4": {
+        "tag_name": "0.0.2-alpha",
+        "commit_date": "2020-02-18T23:56:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "b8e280ae90b28f1aadc50f93073aa6450afe820d": {
+        "tag_name": "0.0.3-alpha",
+        "commit_date": "2020-02-19T06:17:23Z",
+        "license_spdx_id": "MIT"
+      },
+      "cb465b08587798aa788dfd9bc345c2c982ac9e29": {
+        "tag_name": "0.0.4-alpha",
+        "commit_date": "2020-02-19T18:43:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "e584b835f290270af78538013634f348d6cc7398": {
+        "tag_name": "0.0.5-alpha",
+        "commit_date": "2020-02-21T01:12:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "8a7dfc447cd58195531f7c313f6ff693f0e2eb89": {
+        "tag_name": "0.0.6-alpha",
+        "commit_date": "2020-02-21T09:05:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "a27e3104c5c8d69c2986d22c938e679ec0f1b2c7": {
+        "tag_name": "0.0.7-alpha",
+        "commit_date": "2020-02-23T16:01:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "6505ab5f1ebbe080fc072ea3cf68bac289f419ac": {
+        "tag_name": "0.0.8-alpha",
+        "commit_date": "2020-02-23T17:59:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "13d6bbcc0a082113d1c2d33ea41fcbe915e62de9": {
+        "tag_name": "0.0.9-alpha",
+        "commit_date": "2020-02-24T04:17:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "c79ba85e2b8e45ef0a8da9eb0d16e7f2135ad2c6": {
+        "tag_name": "0.0.10-alpha",
+        "commit_date": "2020-03-04T00:38:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "10d8401e72f7b4752a765b61ecbd1539394d6f4e": {
+        "tag_name": "0.0.11-alpha",
+        "commit_date": "2020-03-17T00:03:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "22b3d11338aea9482eda87725ab15b8862de4061": {
+        "tag_name": "0.0.12-alpha",
+        "commit_date": "2020-03-22T21:16:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "a9db57b850b66cb664373f19f6628c4ee39fbcb5": {
+        "tag_name": "0.0.13-alpha",
+        "commit_date": "2020-03-27T19:18:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "67ea89eaff703694453dbfd346c4c31dfab646fc": {
+        "tag_name": "0.0.14-alpha",
+        "commit_date": "2020-04-06T23:57:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "d8f2d9ec30e38ffae03410088062714ac04c36cd": {
+        "tag_name": "0.0.15-alpha",
+        "commit_date": "2020-04-20T07:31:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "5f7f35b25e6bce7b1e5a8f226369a86ab19a623e": {
+        "tag_name": "0.0.16-alpha",
+        "commit_date": "2020-05-12T03:22:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "ead83f4596b4aac06f698b501b5beb3218f6214d": {
+        "tag_name": "0.0.17-alpha",
+        "commit_date": "2020-12-29T01:17:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "336d49d194a9305a72a4853e6b0d900fc60b5ead": {
+        "tag_name": "0.0.20-alpha1",
+        "commit_date": "2021-10-31T18:32:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "1da6d51129f5e4c164e079f18efdb062d4e27d00": {
+        "tag_name": "0.0.20-alpha2",
+        "commit_date": "2021-10-31T19:50:12Z",
+        "license_spdx_id": "MIT"
+      },
+      "aece707e002d2743169d74e6d21b8cb9be314ec3": {
+        "tag_name": "dictionary-20200211",
+        "commit_date": "2020-02-11T18:50:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "08f08a6ff6b9ebae06cb8fe463374a8a5a37e03c": {
+        "tag_name": "v0.0.18",
+        "commit_date": "2021-04-21T08:34:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "436362fc6b588d9d561cbdb575260ca593c8dc56": {
+        "tag_name": "v0.0.19",
+        "commit_date": "2021-07-12T19:37:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "125f038c8ae89c11f3799f668bd2213439dd201b": {
+        "tag_name": "v0.0.20-alpha3",
+        "commit_date": "2021-11-04T14:28:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "5c3f26588adef975bfb45791cb27e966ba8debf3": {
+        "tag_name": "v0.0.20-alpha4",
+        "commit_date": "2021-12-30T01:04:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "738446c8b00bcc93acbbd8ba7df77ffbb018957f": {
+        "tag_name": "v0.0.20-alpha5",
+        "commit_date": "2022-04-04T01:39:51Z",
+        "license_spdx_id": "MIT"
+      },
+      "610473ebb9d729a89c00db1b0d5eec3bfd5afc68": {
+        "tag_name": "v0.0.20-alpha6",
+        "commit_date": "2022-04-11T01:34:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "60528cd8364092c8f1f62b48dbad7278b970d2d6": {
+        "tag_name": "v0.0.20-alpha7",
+        "commit_date": "2022-05-24T05:54:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "729687234a293e0680b12ca055a02fff415da89d": {
+        "tag_name": "v0.0.20",
+        "commit_date": "2022-07-21T23:54:07Z",
+        "license_spdx_id": "MIT"
+      },
+      "c563aa910a8f5690c98ecf7e294d8fb1cbf2816e": {
+        "tag_name": "v0.0.21-alpha1",
+        "commit_date": "2022-11-25T19:01:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "32472c26a2f8cda431466bfaded815b505e08836": {
+        "tag_name": "v0.0.21-alpha2",
+        "commit_date": "2022-11-28T08:37:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "d7cd2973c513e84354f9d6cf50a6417a628a78ce": {
+        "tag_name": "v0.0.21",
+        "commit_date": "2022-11-28T09:21:52Z",
+        "license_spdx_id": "MIT"
+      }
+    },
+    "tags": {
+      "0.0.1-alpha": {
+        "commit_hash": "d2d0ee06c72600982d2f80bca187ce90fee6ad94",
+        "commit_date": "2020-02-14T06:56:54Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.2-alpha": {
+        "commit_hash": "8e32de8a016bc4dce4170ec36881cbb315f94ff4",
+        "commit_date": "2020-02-18T23:56:52Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.3-alpha": {
+        "commit_hash": "b8e280ae90b28f1aadc50f93073aa6450afe820d",
+        "commit_date": "2020-02-19T06:17:23Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.4-alpha": {
+        "commit_hash": "cb465b08587798aa788dfd9bc345c2c982ac9e29",
+        "commit_date": "2020-02-19T18:43:33Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.5-alpha": {
+        "commit_hash": "e584b835f290270af78538013634f348d6cc7398",
+        "commit_date": "2020-02-21T01:12:02Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.6-alpha": {
+        "commit_hash": "8a7dfc447cd58195531f7c313f6ff693f0e2eb89",
+        "commit_date": "2020-02-21T09:05:32Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.7-alpha": {
+        "commit_hash": "a27e3104c5c8d69c2986d22c938e679ec0f1b2c7",
+        "commit_date": "2020-02-23T16:01:01Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.8-alpha": {
+        "commit_hash": "6505ab5f1ebbe080fc072ea3cf68bac289f419ac",
+        "commit_date": "2020-02-23T17:59:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.9-alpha": {
+        "commit_hash": "13d6bbcc0a082113d1c2d33ea41fcbe915e62de9",
+        "commit_date": "2020-02-24T04:17:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.10-alpha": {
+        "commit_hash": "c79ba85e2b8e45ef0a8da9eb0d16e7f2135ad2c6",
+        "commit_date": "2020-03-04T00:38:39Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.11-alpha": {
+        "commit_hash": "10d8401e72f7b4752a765b61ecbd1539394d6f4e",
+        "commit_date": "2020-03-17T00:03:17Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.12-alpha": {
+        "commit_hash": "22b3d11338aea9482eda87725ab15b8862de4061",
+        "commit_date": "2020-03-22T21:16:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.13-alpha": {
+        "commit_hash": "a9db57b850b66cb664373f19f6628c4ee39fbcb5",
+        "commit_date": "2020-03-27T19:18:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.14-alpha": {
+        "commit_hash": "67ea89eaff703694453dbfd346c4c31dfab646fc",
+        "commit_date": "2020-04-06T23:57:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.15-alpha": {
+        "commit_hash": "d8f2d9ec30e38ffae03410088062714ac04c36cd",
+        "commit_date": "2020-04-20T07:31:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.16-alpha": {
+        "commit_hash": "5f7f35b25e6bce7b1e5a8f226369a86ab19a623e",
+        "commit_date": "2020-05-12T03:22:56Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.17-alpha": {
+        "commit_hash": "ead83f4596b4aac06f698b501b5beb3218f6214d",
+        "commit_date": "2020-12-29T01:17:44Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.20-alpha1": {
+        "commit_hash": "336d49d194a9305a72a4853e6b0d900fc60b5ead",
+        "commit_date": "2021-10-31T18:32:30Z",
+        "license_spdx_id": "MIT"
+      },
+      "0.0.20-alpha2": {
+        "commit_hash": "1da6d51129f5e4c164e079f18efdb062d4e27d00",
+        "commit_date": "2021-10-31T19:50:12Z",
+        "license_spdx_id": "MIT"
+      },
+      "dictionary-20200211": {
+        "commit_hash": "aece707e002d2743169d74e6d21b8cb9be314ec3",
+        "commit_date": "2020-02-11T18:50:38Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.18": {
+        "commit_hash": "08f08a6ff6b9ebae06cb8fe463374a8a5a37e03c",
+        "commit_date": "2021-04-21T08:34:21Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.19": {
+        "commit_hash": "436362fc6b588d9d561cbdb575260ca593c8dc56",
+        "commit_date": "2021-07-12T19:37:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20-alpha3": {
+        "commit_hash": "125f038c8ae89c11f3799f668bd2213439dd201b",
+        "commit_date": "2021-11-04T14:28:10Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20-alpha4": {
+        "commit_hash": "5c3f26588adef975bfb45791cb27e966ba8debf3",
+        "commit_date": "2021-12-30T01:04:05Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20-alpha5": {
+        "commit_hash": "738446c8b00bcc93acbbd8ba7df77ffbb018957f",
+        "commit_date": "2022-04-04T01:39:51Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20-alpha6": {
+        "commit_hash": "610473ebb9d729a89c00db1b0d5eec3bfd5afc68",
+        "commit_date": "2022-04-11T01:34:36Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20-alpha7": {
+        "commit_hash": "60528cd8364092c8f1f62b48dbad7278b970d2d6",
+        "commit_date": "2022-05-24T05:54:53Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.20": {
+        "commit_hash": "729687234a293e0680b12ca055a02fff415da89d",
+        "commit_date": "2022-07-21T23:54:07Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.21-alpha1": {
+        "commit_hash": "c563aa910a8f5690c98ecf7e294d8fb1cbf2816e",
+        "commit_date": "2022-11-25T19:01:34Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.21-alpha2": {
+        "commit_hash": "32472c26a2f8cda431466bfaded815b505e08836",
+        "commit_date": "2022-11-28T08:37:47Z",
+        "license_spdx_id": "MIT"
+      },
+      "v0.0.21": {
+        "commit_hash": "d7cd2973c513e84354f9d6cf50a6417a628a78ce",
+        "commit_date": "2022-11-28T09:21:52Z",
+        "license_spdx_id": "MIT"
+      }
+    }
+  }
+}

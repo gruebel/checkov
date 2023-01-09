@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterable
 
 from checkov.github.dal import Github
 from generate.cve_db.github_types import (
@@ -12,7 +13,7 @@ from generate.cve_db.github_types import (
 )
 
 
-def get_package_vulnerabilities(github: Github, ecosystem: str) -> dict[str, PackageData] | None:
+def get_package_vulnerabilities(github: Github, ecosystem: str, excluded_packages: Iterable[str] | None = None) -> dict[str, PackageData] | None:
     """Retrieves the vulnerabilities from the GitHub Advisory DB"""
 
     # end cursor valuation not needed yet
@@ -59,6 +60,8 @@ def get_package_vulnerabilities(github: Github, ecosystem: str) -> dict[str, Pac
     vulnerability_nodes = result["data"]["securityVulnerabilities"]["nodes"]
     for node in vulnerability_nodes:
         package_name, vulnerability = create_vulnerability_entry(node)
+        if package_name in excluded_packages:
+            continue
 
         if package_name in package_vulnerabilities:
             package_vulnerabilities[package_name]["vulnerabilities"].append(vulnerability)
