@@ -148,6 +148,7 @@ jobs:
       - name: Run performance tests
         run: |
           pipenv run pytest
+          CHECKOV_GRAPH_FRAMEWORK=IGRAPH pipenv run pytest
         working-directory: ${{ env.working-directory }}
 
   dogfood-tests:
