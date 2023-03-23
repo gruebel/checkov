@@ -178,6 +178,9 @@ class Runner(BaseRunner[ObjectGraphManager]):  # if a graph is added, Any needs 
                 # result record
                 if result_config:
                     end, start = self.get_start_end_lines(end, result_config, start)
+                    if start == -1 and end == -1:
+                        logging.info(f"Skipping line in file path {file_path} in key {key}")
+                        continue
                 if platform.system() == "Windows":
                     root_folder = os.path.split(file_path)[0]
 
@@ -243,6 +246,17 @@ class Runner(BaseRunner[ObjectGraphManager]):  # if a graph is added, Any needs 
                 end_line = entity[END_LINE]
 
                 if self.check_type == CheckType.GITHUB_ACTIONS:
+                    if entity.get(CustomAttributes.BLOCK_NAME) == 'permissions' and start_line == 0 and end_line == 0:
+                        # reconstruct permissions start-end lines since we do not have that information during graph build
+                        for line in self.definitions_raw[entity_file_path]:
+                            if line and 'permissions' in line[1]:
+                                start_line = line[0]
+                                end_line = line[0]
+                                break
+
+                    entity[CustomAttributes.ID] = self.get_resource(entity_file_path, entity[CustomAttributes.ID],
+                                                                    entity[CustomAttributes.RESOURCE_TYPE],
+                                                                    start_line, end_line, graph_resource=True)
                     record: "Record" = GithubActionsRecord(
                         check_id=check.id,
                         bc_check_id=check.bc_id,
@@ -285,7 +299,7 @@ class Runner(BaseRunner[ObjectGraphManager]):  # if a graph is added, Any needs 
         return []
 
     def get_resource(self, file_path: str, key: str, supported_entities: Iterable[str],
-                     start_line: int = -1, end_line: int = -1) -> str:
+                     start_line: int = -1, end_line: int = -1, graph_resource: bool = False) -> str:
         return f"{file_path}.{key}"
 
     @abstractmethod
@@ -329,8 +343,12 @@ class Runner(BaseRunner[ObjectGraphManager]):  # if a graph is added, Any needs 
                     end_line: int = job_instance.get(END_LINE, -1)
                     end_line_to_job_name_dict[end_line] = job_name
 
-                    steps = [step for step in job_instance.get('steps', []) or [] if step]
-                    if steps:
-                        for step in steps:
-                            end_line_to_job_name_dict[step.get(END_LINE)] = job_name
+                    steps: list[dict[str, Any]] = [step for step in job_instance.get('steps', []) or [] if step]
+                    if not steps:
+                        continue
+
+                    for step in steps:
+                        if not isinstance(step, dict) or END_LINE not in step:
+                            continue
+                        end_line_to_job_name_dict[step.get(END_LINE)] = job_name  # type: ignore[index] #
         return end_line_to_job_name_dict

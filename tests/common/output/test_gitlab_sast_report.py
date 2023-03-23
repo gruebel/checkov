@@ -52,12 +52,13 @@ def test_iac_output():
     # remove dynamic data
     for vul in output["vulnerabilities"]:
         del vul["id"]
-        del vul["links"]
         del vul["solution"]
         del vul["description"]
         del vul["location"]["file"]
-        for ident in vul["identifiers"]:
-            del ident["url"]
+        if "links" in vul:
+            del vul["links"]
+            for ident in vul["identifiers"]:
+                del ident["url"]
     assert sorted(output["vulnerabilities"], key=itemgetter("name")) == sorted(
         [
             {
@@ -105,11 +106,23 @@ def test_sca_package_output():
         check_class=check_class,
         vulnerability_details=vulnerability_details,
         licenses="OSI_BDS",
+        package={'package_registry': "https://registry.npmjs.org/", 'is_private_registry': False},
     )
+    # also add a BC_VUL_2 record
+    bc_record = create_report_cve_record(
+        rootless_file_path=rootless_file_path,
+        file_abs_path=file_abs_path,
+        check_class=check_class,
+        vulnerability_details=vulnerability_details,
+        licenses="OSI_BDS",
+        package={'package_registry': "https://registry.npmjs.org/", 'is_private_registry': False},
+    )
+    bc_record.check_id = "BC_VUL_2"
 
     report = Report(CheckType.SCA_PACKAGE)
     report.add_resource(record.resource)
     report.add_record(record)
+    report.add_record(bc_record)
 
     report.extra_resources.add(
         ExtraResource(
@@ -145,7 +158,23 @@ def test_sca_package_output():
             "description": "Django before 1.11.27, 2.x before 2.2.9, and 3.x before 3.0.1 allows account takeover. ...",
             "severity": "Medium",
             "solution": "fixed in 3.0.1, 2.2.9, 1.11.27",
-        }
+        },
+        {
+            "identifiers": [
+                {
+                    "name": "CVE-2019-19844 - django: 1.2",
+                    "type": "cve",
+                    "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-19844",
+                    "value": "CVE-2019-19844",
+                }
+            ],
+            "links": [{"url": "https://nvd.nist.gov/vuln/detail/CVE-2019-19844"}],
+            "location": {"file": "path/to/requirements.txt"},
+            "name": "CVE-2019-19844 - django: 1.2",
+            "description": "Django before 1.11.27, 2.x before 2.2.9, and 3.x before 3.0.1 allows account takeover. ...",
+            "severity": "Medium",
+            "solution": "fixed in 3.0.1, 2.2.9, 1.11.27",
+        },
     ]
 
 
@@ -179,6 +208,7 @@ def test_sca_license_output():
         scanned_file_path=file_abs_path,
         rootless_file_path=rootless_file_path,
         runner_filter=RunnerFilter(),
+        packages_map=dict(),
         license_statuses=license_statuses,
         sca_details=sca_details,
         report_type=report.check_type,

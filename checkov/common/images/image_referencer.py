@@ -16,7 +16,6 @@ from checkov.common.bridgecrew.vulnerability_scanning.integrations.docker_image_
     docker_image_scanning_integration
 from checkov.common.output.common import ImageDetails
 from checkov.common.output.report import Report, CheckType
-from checkov.common.runners.base_runner import strtobool
 from checkov.common.sca.commons import should_run_scan
 from checkov.common.sca.output import add_to_report_sca_data, get_license_statuses_async
 from checkov.common.typing import _LicenseStatus
@@ -27,6 +26,8 @@ if TYPE_CHECKING:
     from networkx import DiGraph
 
 _Definitions = TypeVar("_Definitions")
+
+INVALID_IMAGE_NAME_CHARS = ("[", "{", "(", "<", "$")
 
 
 def fix_related_resource_ids(report: Report | None, tmp_dir: str) -> None:
@@ -110,6 +111,17 @@ class ImageReferencer:
             return ""
 
 
+def is_valid_public_image_name(image_name: str) -> bool:
+    if image_name.startswith('localhost'):
+        return False
+    if any(char in image_name for char in INVALID_IMAGE_NAME_CHARS):
+        return False
+    if image_name.count(":") > 1:
+        # if there is more than one colon, then it is typically a private registry with port reference
+        return False
+    return True
+
+
 class ImageReferencerMixin(Generic[_Definitions]):
     """Mixin class to simplify image reference search"""
 
@@ -139,12 +151,17 @@ class ImageReferencerMixin(Generic[_Definitions]):
         root_path = Path(root_path) if root_path else None
         check_class = f"{image_scanner.__module__}.{image_scanner.__class__.__qualname__}"
         report_type = CheckType.SCA_IMAGE
-        image_names_to_query = list(set(map(lambda i: i.name, images)))
+        image_names_to_query = list(set(filter(lambda i: is_valid_public_image_name(i), map(lambda i: i.name, images))))
         results = asyncio.run(self._fetch_image_results_async(image_names_to_query))
 
         license_statuses_by_image = asyncio.run(self._fetch_licenses_per_image(image_names_to_query, results))
 
         for image in images:
+            try:
+                results_index = image_names_to_query.index(image.name)
+                cached_results = results[results_index]
+            except ValueError:
+                cached_results = {}
             self._add_image_records(
                 report=report,
                 root_path=root_path,
@@ -154,7 +171,7 @@ class ImageReferencerMixin(Generic[_Definitions]):
                 runner_filter=runner_filter,
                 report_type=report_type,
                 bc_integration=bc_integration,
-                cached_results=results[image_names_to_query.index(image.name)],
+                cached_results=cached_results,
                 license_statuses=license_statuses_by_image.get(image.name) or []
             )
 
@@ -196,7 +213,8 @@ class ImageReferencerMixin(Generic[_Definitions]):
                 file_content=f'image: {image.name}',
                 docker_image_name=image.name,
                 related_resource_id=image.related_resource_id,
-                root_folder=root_path)
+                root_folder=root_path
+            )
             report.image_cached_results.append(image_scanning_report)
 
             result = cached_results.get("results", [{}])[0]
@@ -219,37 +237,6 @@ class ImageReferencerMixin(Generic[_Definitions]):
                 dockerfile_path=dockerfile_path,
                 rootless_file_path=rootless_file_path_to_report,
                 image_details=image_details,
-                runner_filter=runner_filter,
-                report_type=report_type,
-                license_statuses=license_statuses,
-            )
-        elif strtobool(os.getenv("CHECKOV_EXPERIMENTAL_IMAGE_REFERENCING", "False")):
-            # experimental flag on running image referencers via local twistcli
-            from checkov.sca_image.runner import Runner as sca_image_runner
-
-            runner = sca_image_runner()
-
-            image_id = ImageReferencer.inspect(image.name)
-            if not image_id:
-                logging.info(f"(IR debug) No image with image.name={image.name} found. hence image_id={image_id}.")
-                return None
-
-            scan_result = runner.scan(image_id, dockerfile_path, runner_filter)
-            if scan_result is None:
-                return None
-
-            self.raw_report = scan_result
-            result = scan_result.get('results', [{}])[0]
-            rootless_file_path_to_report = f"{dockerfile_path} ({image.name} lines:{image.start_line}-" \
-                                           f"{image.end_line} ({image_id}))"
-
-            self._add_vulnerability_records(
-                report=report,
-                result=result,
-                check_class=check_class,
-                dockerfile_path=dockerfile_path,
-                rootless_file_path=rootless_file_path_to_report,
-                image_details=None,
                 runner_filter=runner_filter,
                 report_type=report_type,
                 license_statuses=license_statuses,

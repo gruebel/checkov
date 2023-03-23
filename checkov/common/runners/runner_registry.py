@@ -14,7 +14,7 @@ from typing import List, Dict, Any, Optional, cast, TYPE_CHECKING, Type
 
 from typing_extensions import Literal
 
-from checkov.common.bridgecrew.code_categories import CodeCategoryMapping
+from checkov.common.bridgecrew.code_categories import CodeCategoryMapping, CodeCategoryType
 from checkov.common.bridgecrew.platform_integration import bc_integration
 from checkov.common.bridgecrew.integration_features.features.policy_metadata_integration import \
     integration as metadata_integration
@@ -31,8 +31,9 @@ from checkov.common.output.csv import CSVSBOM
 from checkov.common.output.cyclonedx import CycloneDX
 from checkov.common.output.gitlab_sast import GitLabSast
 from checkov.common.output.report import Report, merge_reports
+from checkov.common.output.sarif import Sarif
 from checkov.common.parallelizer.parallel_runner import parallel_runner
-from checkov.common.typing import _ExitCodeThresholds, _BaseRunner
+from checkov.common.typing import _ExitCodeThresholds, _BaseRunner, _ScaExitCodeThresholds
 from checkov.common.util import data_structures_utils
 from checkov.common.util.banner import tool as tool_name
 from checkov.common.util.json_utils import CustomJSONEncoder
@@ -52,14 +53,20 @@ if TYPE_CHECKING:
 CONSOLE_OUTPUT = "console"
 CHECK_BLOCK_TYPES = frozenset(["resource", "data", "provider", "module"])
 CYCLONEDX_OUTPUTS = ("cyclonedx", "cyclonedx_json")
-OUTPUT_CHOICES = ("cli", "cyclonedx", "cyclonedx_json", "json", "junitxml", "github_failed_only", "gitlab_sast", "sarif", "csv")
+OUTPUT_CHOICES = ["cli", "cyclonedx", "cyclonedx_json", "json", "junitxml", "github_failed_only", "gitlab_sast", "sarif", "csv"]
 SUMMARY_POSITIONS = frozenset(['top', 'bottom'])
 OUTPUT_DELIMITER = "\n--- OUTPUT DELIMITER ---\n"
 
 
 class RunnerRegistry:
-    def __init__(self, banner: str, runner_filter: RunnerFilter, *runners: _BaseRunner,
-                 secrets_omitter_class: Type[SecretsOmitter] = SecretsOmitter) -> None:
+    def __init__(
+        self,
+        banner: str,
+        runner_filter: RunnerFilter,
+        *runners: _BaseRunner,
+        tool: str = tool_name,
+        secrets_omitter_class: Type[SecretsOmitter] = SecretsOmitter,
+    ) -> None:
         self.logger = logging.getLogger(__name__)
         self.runner_filter = runner_filter
         self.runners = list(runners)
@@ -67,7 +74,7 @@ class RunnerRegistry:
         self.scan_reports: list[Report] = []
         self.image_referencing_runners = self._get_image_referencing_runners()
         self.filter_runner_framework()
-        self.tool = tool_name
+        self.tool = tool
         self._check_type_to_report_map: dict[str, Report] = {}  # used for finding reports with the same check type
         self.licensing_integration = licensing_integration  # can be maniuplated by unit tests
         self.secrets_omitter_class = secrets_omitter_class
@@ -142,9 +149,12 @@ class RunnerRegistry:
             reports = [r for r in parallel_runner.run_function(func=_parallel_run, items=valid_runners, group_size=1) if r]
 
         merged_reports = self._merge_reports(reports)
-
         if bc_integration.bc_api_key:
             self.secrets_omitter_class(merged_reports).omit()
+
+        post_scan_reports = integration_feature_registry.run_post_scan(merged_reports)
+        if post_scan_reports:
+            merged_reports.extend(post_scan_reports)
 
         for scan_report in merged_reports:
             self._handle_report(scan_report, repo_root_for_plan_enrichment)
@@ -198,12 +208,16 @@ class RunnerRegistry:
         return any(scan_report.error_status != ErrorStatus.SUCCESS for scan_report in reports)
 
     @staticmethod
-    def get_fail_thresholds(config: argparse.Namespace, report_type: str) -> _ExitCodeThresholds:
+    def get_fail_thresholds(config: argparse.Namespace, report_type: str) -> _ExitCodeThresholds | _ScaExitCodeThresholds:
 
         soft_fail = config.soft_fail
 
         soft_fail_on_checks = []
         soft_fail_threshold = None
+
+        # these specifically check the --hard-fail-on and --soft-fail-on args, NOT enforcement rules, so
+        # we don't care about SCA as a special case
+
         # soft fail on the highest severity threshold in the list
         for val in convert_csv_string_arg_to_list(config.soft_fail_on):
             if val.upper() in Severities:
@@ -236,25 +250,38 @@ class RunnerRegistry:
 
         if not config.use_enforcement_rules:
             logging.debug('Use enforcement rules is FALSE')
-        elif not soft_fail:
-            code_category_type = CodeCategoryMapping[report_type]
-            enf_rule = repo_config_integration.code_category_configs.get(code_category_type)
 
-            if enf_rule:
-                logging.debug('Use enforcement rules is TRUE')
+        # if there is a severity in either the soft-fail-on list or hard-fail-on list, then we will ignore enforcement rules and skip this
+        # it means that SCA will not be treated as having two different thresholds in that case
+        # if the lists only contain check IDs, then we will merge them with the enforcement rule value
+        elif not soft_fail and not soft_fail_threshold and not hard_fail_threshold:
+            if 'sca_' in report_type:
+                code_category_types = cast(List[CodeCategoryType], CodeCategoryMapping[report_type])
+                category_rules = {
+                    category: repo_config_integration.code_category_configs[category] for category in code_category_types
+                }
+                return cast(_ScaExitCodeThresholds, {
+                    category: {
+                        'soft_fail': category_rules[category].is_global_soft_fail(),
+                        'soft_fail_checks': soft_fail_on_checks,
+                        'soft_fail_threshold': soft_fail_threshold,
+                        'hard_fail_checks': hard_fail_on_checks,
+                        'hard_fail_threshold': category_rules[category].hard_fail_threshold
+                    } for category in code_category_types
+                })
+            else:
+                code_category_type = cast(CodeCategoryType, CodeCategoryMapping[report_type])  # not a list
+                enf_rule = repo_config_integration.code_category_configs[code_category_type]
 
-                # if there is a severity in either the soft-fail-on list or hard-fail-on list, then we will ignore enforcement rules
-                # if the lists only contain check IDs, then we will merge them with the enforcement rule value
-                if soft_fail_threshold or hard_fail_threshold:
-                    logging.debug('Soft or hard fail threshold is set; ignoring enforcement rules')
-                else:
+                if enf_rule:
+                    logging.debug('Use enforcement rules is TRUE')
                     hard_fail_threshold = enf_rule.hard_fail_threshold
                     soft_fail = enf_rule.is_global_soft_fail()
                     logging.debug(f'Using enforcement rule hard fail threshold for this report: {hard_fail_threshold.name}')
-            else:
-                logging.debug(f'Use enforcement rules is TRUE, but did not find an enforcement rule for report type {report_type}, so falling back to CLI args')
+                else:
+                    logging.debug(f'Use enforcement rules is TRUE, but did not find an enforcement rule for report type {report_type}, so falling back to CLI args')
         else:
-            logging.debug('Soft fail was true; ignoring enforcement rules')
+            logging.debug('Soft fail was true or a severity was used in soft fail on / hard fail on; ignoring enforcement rules')
 
         return {
             'soft_fail': soft_fail,
@@ -312,10 +339,11 @@ class RunnerRegistry:
                     sarif_reports.append(report)
                 if "cli" in config.output:
                     cli_reports.append(report)
-                if any(cyclonedx in config.output for cyclonedx in CYCLONEDX_OUTPUTS):
-                    cyclonedx_reports.append(report)
                 if "gitlab_sast" in config.output:
                     gitlab_reports.append(report)
+            if not report.is_empty() or len(report.extra_resources):
+                if any(cyclonedx in config.output for cyclonedx in CYCLONEDX_OUTPUTS):
+                    cyclonedx_reports.append(report)
                 if "csv" in config.output:
                     git_org = ""
                     git_repository = ""
@@ -362,7 +390,7 @@ class RunnerRegistry:
             ansi_escape = re.compile(r'(?:\x1B[@-_]|[\x80-\x9F])[0–9:;<=>?]*[ -/]*[@-~]')
             data_outputs['cli'] = ansi_escape.sub('', cli_output)
         if "sarif" in config.output:
-            master_report = Report("merged")
+            sarif = Sarif(reports=sarif_reports, tool=self.tool)
 
             output_format = output_formats["sarif"]
             if "cli" not in config.output and output_format == CONSOLE_OUTPUT:
@@ -378,22 +406,19 @@ class RunnerRegistry:
                         use_bc_ids=config.output_bc_ids,
                         summary_position=config.summary_position
                     ))
-                master_report.failed_checks += report.failed_checks
-                master_report.skipped_checks += report.skipped_checks
 
             if output_format == CONSOLE_OUTPUT:
                 # don't write to file, if an explicit file path was set
-                master_report.write_sarif_output(self.tool)
+                sarif.write_sarif_output()
 
-            if output_format == CONSOLE_OUTPUT:
                 del output_formats["sarif"]
 
                 if "cli" not in config.output and url:
-                    print("More details: {}".format(url))
+                    print(f"More details: {url}")
                 if CONSOLE_OUTPUT in output_formats.values():
                     print(OUTPUT_DELIMITER)
 
-            data_outputs["sarif"] = json.dumps(master_report.get_sarif_json(self.tool), cls=CustomJSONEncoder)
+            data_outputs["sarif"] = json.dumps(sarif.json, cls=CustomJSONEncoder)
         if "json" in config.output:
             if config.compact and report_jsons:
                 self.strip_code_blocks_from_json(report_jsons)
@@ -637,8 +662,9 @@ class RunnerRegistry:
             results = report.get('results', {})
             for result in results.values():
                 for result_dict in result:
-                    result_dict["code_block"] = None
-                    result_dict["connected_node"] = None
+                    if isinstance(result_dict, dict):
+                        result_dict["code_block"] = None
+                        result_dict["connected_node"] = None
 
     @staticmethod
     def extract_git_info_from_account_id(account_id: str) -> tuple[str, str]:

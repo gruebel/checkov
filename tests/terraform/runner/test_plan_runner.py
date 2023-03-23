@@ -635,7 +635,7 @@ class TestRunnerValid(unittest.TestCase):
         tf_file_path = Path(__file__).parent / "resources/plan_nested_child_modules_with_connections/tfplan.json"
 
         passing_resources = {
-            "module.s3_submodule.aws_s3_bucket.submodule_bucket",
+            "module.s3_module.module.s3_submodule.aws_s3_bucket.submodule_bucket",
             "module.s3_module.aws_s3_bucket.module_bucket",
             "aws_s3_bucket.root_bucket",
         }
@@ -771,6 +771,29 @@ class TestRunnerValid(unittest.TestCase):
             self.assertIn(check.resource, valid_resources_ids)
 
         self.assertEqual(len(report.resources), 3)
+        
+    @mock.patch.dict(os.environ, {'CHECKOV_ENABLE_NESTED_MODULES': 'True'})
+    def test_plan_resources_created_by_modules(self):
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        valid_plan_path = current_dir + "/extra_tf_plan_checks/modules.json"
+        runner = Runner()
+        report = runner.run(
+            root_folder=None, external_checks_dir=None, files=[valid_plan_path],
+            runner_filter=RunnerFilter(checks=['CKV2_GCP_12', 'CKV_GCP_88'])
+        )
+        passed_checks_CKV2_GCP_12 = [check for check in report.passed_checks if check.check_id == 'CKV2_GCP_12']
+        passed_checks_CKV_GCP_88 = [check for check in report.passed_checks if check.check_id == 'CKV_GCP_88']
+        
+        assert passed_checks_CKV2_GCP_12[0].resource == 'module.achia_test_valid_443.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV2_GCP_12[1].resource == 'module.achia_test_valid_ports.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV2_GCP_12[2].resource == 'module.achia_test_violating_no_ports.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV2_GCP_12[3].resource == 'module.achia_test_violating_port.google_compute_firewall.custom[0]'
+        
+        assert passed_checks_CKV_GCP_88[0].resource == 'module.achia_test_valid_443.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV_GCP_88[1].resource == 'module.achia_test_valid_ports.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV_GCP_88[2].resource == 'module.achia_test_violating_no_ports.google_compute_firewall.custom[0]'
+        assert passed_checks_CKV_GCP_88[3].resource == 'module.achia_test_violating_port.google_compute_firewall.custom[0]'
+        
 
     def tearDown(self) -> None:
         resource_registry.checks = self.orig_checks

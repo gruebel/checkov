@@ -9,7 +9,7 @@ from collections.abc import Hashable
 from copy import deepcopy
 from json import JSONDecodeError
 
-import dpath.util
+import dpath
 from typing import TYPE_CHECKING, List, Dict, Any, Tuple, Union, Optional
 
 from lark.tree import Tree
@@ -17,6 +17,7 @@ from lark.tree import Tree
 from checkov.common.graph.graph_builder import Edge
 from checkov.common.graph.graph_builder.utils import join_trimmed_strings
 from checkov.common.graph.graph_builder.variable_rendering.renderer import VariableRenderer
+from checkov.common.util.data_structures_utils import find_in_dict
 from checkov.common.util.type_forcers import force_int
 from checkov.common.graph.graph_builder.graph_components.attribute_names import CustomAttributes, reserved_attribute_names
 from checkov.terraform.graph_builder.graph_components.block_types import BlockType
@@ -26,8 +27,7 @@ from checkov.terraform.graph_builder.utils import (
     attribute_has_nested_attributes, attribute_has_dup_with_dynamic_attributes,
 )
 from checkov.terraform.graph_builder.variable_rendering.vertex_reference import VertexReference
-from checkov.terraform.graph_builder.variable_rendering.evaluate_terraform import replace_string_value, \
-    evaluate_terraform
+import checkov.terraform.graph_builder.variable_rendering.evaluate_terraform as evaluator
 
 if TYPE_CHECKING:
     from checkov.terraform.graph_builder.local_graph import TerraformLocalGraph
@@ -47,6 +47,11 @@ LEFT_BRACKET_WITH_QUOTATION = '["'
 RIGHT_BRACKET_WITH_QUOTATION = '"]'
 LEFT_BRACKET = '['
 RIGHT_BRACKET = ']'
+LEFT_CURLY = '{'
+RIGHT_CURLY = '}'
+DOLLAR_PREFIX = '$'
+FOR_EXPRESSION_DICT = ':>'
+KEY_VALUE_SEPERATOR = ' : '
 
 # matches the internal value of the 'type' attribute: usually like '${map}' or '${map(string)}', but could possibly just
 # be like 'map' or 'map(string)' (but once we hit a ( or } we can stop)
@@ -80,6 +85,9 @@ class TerraformVariableRenderer(VariableRenderer):
     def evaluate_vertex_attribute_from_edge(self, edge_list: List[Edge]) -> None:
         multiple_edges = len(edge_list) > 1
         edge = edge_list[0]
+        for e in edge_list:
+            if not self.local_graph.vertices[e.origin] or not self.local_graph.vertices[e.dest]:
+                return
         origin_vertex_attributes = self.local_graph.vertices[edge.origin].attributes
         val_to_eval = deepcopy(origin_vertex_attributes.get(edge.label, ""))
 
@@ -182,7 +190,7 @@ class TerraformVariableRenderer(VariableRenderer):
                 default_val = self.get_default_placeholder_value(var_type)
             value = None
             if isinstance(default_val, dict):
-                value = self.extract_value_from_vertex(key_path, default_val)
+                value = find_in_dict(input_dict=default_val, key_path=create_variable_key_path(key_path))
             elif (
                 isinstance(var_type, str)
                 and var_type.startswith("${object")
@@ -194,7 +202,7 @@ class TerraformVariableRenderer(VariableRenderer):
                         value = self.extract_value_from_vertex(key_path, default_val_eval)
                 except Exception:
                     logging.debug(f"cant evaluate this rendered value: {default_val}")
-            return default_val if not value else value
+            return default_val if value is None else value
         if attributes.get(CustomAttributes.BLOCK_TYPE) == BlockType.OUTPUT:
             return attributes.get("value")
         return None
@@ -254,7 +262,7 @@ class TerraformVariableRenderer(VariableRenderer):
         )
         str_to_evaluate = str_to_evaluate.replace("\\\\", "\\")
         evaluated_attribute_value = (
-            str_to_evaluate if self.attributes_no_eval(changed_attribute_key, vertex) else evaluate_terraform(str_to_evaluate)
+            str_to_evaluate if self.attributes_no_eval(changed_attribute_key, vertex) else evaluator.evaluate_terraform(str_to_evaluate)
         )
         self.local_graph.update_vertex_attribute(
             vertex, changed_attribute_key, evaluated_attribute_value, change_origin_id, attribute_at_dest
@@ -269,7 +277,7 @@ class TerraformVariableRenderer(VariableRenderer):
                 origin_value = decoded_attributes[attr]
                 if not isinstance(origin_value, str):
                     continue
-                evaluated_attribute_value = evaluate_terraform(origin_value)
+                evaluated_attribute_value = evaluator.evaluate_terraform(origin_value)
                 if origin_value != evaluated_attribute_value:
                     vertex.update_inner_attribute(attr, vertex.attributes, evaluated_attribute_value)
 
@@ -284,7 +292,7 @@ class TerraformVariableRenderer(VariableRenderer):
     ) -> Union[Any, List[Any]]:
         if count > 1:
             return original_val
-        new_val = replace_string_value(
+        new_val = evaluator.replace_string_value(
             original_str=original_val,
             str_to_replace=replaced_key,
             replaced_value=replaced_value,
@@ -308,7 +316,7 @@ class TerraformVariableRenderer(VariableRenderer):
                         rendered_blocks = self._process_dynamic_blocks(dynamic_blocks)
                     except Exception:
                         logging.info(f'Failed to process dynamic blocks in file {vertex.path} of resource {vertex.name}'
-                                     f' for blocks: {dynamic_blocks}', exc_info=True)
+                                     f' for blocks: {dynamic_blocks}')
                         continue
                     changed_attributes = []
 
@@ -521,7 +529,7 @@ class TerraformVariableRenderer(VariableRenderer):
         if type(val) not in [str, list, set, dict]:
             evaluated_val = val
         elif isinstance(val, str):
-            evaluated_val = evaluate_terraform(val, keep_interpolations=False)
+            evaluated_val = evaluator.evaluate_terraform(val, keep_interpolations=False)
         elif isinstance(val, list):
             evaluated_val = []
             for v in val:
@@ -569,3 +577,12 @@ def get_lookup_value(block_content, dynamic_argument) -> str:
     elif 'True' in block_content[dynamic_argument]:
         lookup_value = 'true'
     return lookup_value
+
+
+def create_variable_key_path(key_path: list[str]) -> str:
+    """Returns the key_path without the var prefix
+
+    ex.
+    ["var", "properties", "region"] -> "properties/region"
+    """
+    return "/".join(key_path[1:])

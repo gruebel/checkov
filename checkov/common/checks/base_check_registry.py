@@ -89,7 +89,7 @@ class BaseCheckRegistry:
             res = self.checks[entity].copy() if entity in self.checks.keys() else []
             # check wildcards
             for pattern, checks in self.wildcard_checks.items():
-                if fnmatch.fnmatchcase(entity, pattern):
+                if entity and fnmatch.fnmatchcase(entity, pattern):
                     res += checks
             return res
 
@@ -109,10 +109,13 @@ class BaseCheckRegistry:
         runner_filter: RunnerFilter,
         report_type: Optional[str] = None  # allow runners like TF plan to override the type while using the same registry
     ) -> Dict[BaseCheck, _CheckResult]:
-
-        (entity_type, entity_name, entity_configuration) = self.extract_entity_details(entity)
-
         results: Dict[BaseCheck, _CheckResult] = {}
+
+        try:
+            (entity_type, entity_name, entity_configuration) = self.extract_entity_details(entity)
+        except Exception:
+            logging.debug(f"Error in entity details extraction for file {scanned_file}", exc_info=True)
+            return results
 
         if not isinstance(entity_configuration, dict):
             return results
@@ -153,9 +156,6 @@ class BaseCheckRegistry:
             )
             return result
         except Exception:
-            logging.error(f'Failed to run check {check.id} on {scanned_file}:{entity_type}.{entity_name}',
-                          exc_info=True)
-            logging.info(f'Entity configuration: {entity_configuration}')
             return _CheckResult(
                 result=CheckResult.UNKNOWN, suppress_comment="", evaluated_keys=[],
                 results_configuration=entity_configuration, check=check, entity=entity_configuration

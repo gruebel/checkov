@@ -320,6 +320,7 @@ definition:
 ### Ansible
 Following `resource_types` are supported
 
+- `block`
 - `tasks.[module name]`
 
 ex.
@@ -332,6 +333,25 @@ attribute: url
 operator: starting_with
 value: "https://"
 ```
+
+#### Note
+In the case a module can be used without parameters by just adding the value to it, 
+then it can be queried via a the special attribute `__self__`.
+
+ex.
+```yaml
+cond_type: "attribute"
+resource_types:
+  - "ansible.builtin.command"
+  - "command"
+attribute: "__self__"
+operator: "not_contains"
+value: "vim"
+```
+
+### ARM
+All resources can be referenced under `resource_types`.
+Currently, no support for connections.
 
 ### Bicep
 All resources can be referenced under `resource_types`.
@@ -376,7 +396,7 @@ Following connections are supported
 
 #### Note
 The value for `permissions` can be either a map or a single string.
-Map entries can be referenced via their respective key, but a single string entry can be accessed by using `permissions` as the attribute.
+Map entries should be prefixed with `permissions.` key and a single string entry can be accessed by using `permissions` as the attribute.
 
 ex.
 ```yaml
@@ -389,6 +409,16 @@ value: "write-all"
 ```
 
 The value for `on` can be either a map, a string or a list of strings.
+
+ex.
+```yaml
+cond_type: attribute
+resource_types:
+  - "on"
+attribute: on.push.branches
+operator: contains
+value: main
+```
 
 ### Kubernetes
 All resources can be referenced under `resource_types`.

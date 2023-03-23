@@ -9,7 +9,7 @@ from typing import Any
 
 import yaml
 
-from checkov.common.checks_infra.checks_parser import NXGraphCheckParser
+from checkov.common.checks_infra.checks_parser import GraphCheckParser
 from checkov.common.checks_infra.registry import Registry
 from checkov.common.models.enums import CheckResult
 from checkov.runner_filter import RunnerFilter
@@ -22,8 +22,17 @@ class TestYamlPolicies(unittest.TestCase):
         warnings.filterwarnings("ignore", category=ResourceWarning)
         warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+    def test_SecretsAreRotated(self):
+        self.go("SecretsAreRotated")
+
+    def test_S3BucketLifecycle(self):
+        self.go("S3BucketLifecycle")
+
     def test_AccessControlGroupRuleDefine(self):
         self.go("AccessControlGroupRuleDefine")
+
+    def test_S3BucketEventNotifications(self):
+        self.go("S3BucketEventNotifications")
 
     def test_ADORepositoryHasMinTwoReviewers(self):
         self.go("ADORepositoryHasMinTwoReviewers")
@@ -340,8 +349,38 @@ class TestYamlPolicies(unittest.TestCase):
     def test_GCPComputeFirewallOverlyPermissiveToAllTraffic(self):
         self.go("GCPComputeFirewallOverlyPermissiveToAllTraffic")
 
+    def test_AzureConfigMSSQLwithAD(self):
+        self.go("AzureConfigMSSQLwithAD")
+
+    def test_AzurePostgreSQLFlexServerNotOverlyPermissive(self):
+        self.go("AzurePostgreSQLFlexServerNotOverlyPermissive")
+
+    def test_GCPMySQLdbInstancePoint_In_TimeRecoveryBackupIsEnabled(self):
+        self.go("GCPMySQLdbInstancePoint_In_TimeRecoveryBackupIsEnabled")
+
+    def test_GCPdisableAlphaClusterFeatureInKubernetesEngineClusters(self):
+        self.go("GCPdisableAlphaClusterFeatureInKubernetesEngineClusters")
+        
+    def test_AzureContainerInstanceconfigManagedIdentity(self):
+            self.go("AzureContainerInstanceconfigManagedIdentity")
+
+    def test_AzureAKSclusterAzureCNIEnabled(self):
+        self.go("AzureAKSclusterAzureCNIEnabled")
+
+    def test_AzureACR_HTTPSwebhook(self):
+        self.go("AzureACR_HTTPSwebhook")
+
+    def test_AzureSubnetConfigWithNSG(self):
+        self.go("AzureSubnetConfigWithNSG")
+
+    def test_AzureKeyVaultConfigPrivateEndpoint(self):
+        self.go("AzureKeyVaultConfigPrivateEndpoint")
+
+    def test_AzureStorageAccConfigWithPrivateEndpoint(self):
+        self.go("AzureStorageAccConfigWithPrivateEndpoint")
+
     def test_registry_load(self):
-        registry = Registry(parser=NXGraphCheckParser(), checks_dir=str(
+        registry = Registry(parser=GraphCheckParser(), checks_dir=str(
             Path(__file__).parent.parent.parent.parent.parent / "checkov" / "terraform" / "checks" / "graph_checks"))
         registry.load_checks()
         self.assertGreater(len(registry.checks), 0)
@@ -363,7 +402,6 @@ class TestYamlPolicies(unittest.TestCase):
                     expected = load_yaml_data("expected.yaml", dir_path)
                     assert expected is not None
                     report = get_policy_results(dir_path, policy)
-                    expected = load_yaml_data("expected.yaml", dir_path)
 
                     expected_to_fail = expected.get('fail', [])
                     expected_to_pass = expected.get('pass', [])

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 from typing import Union, Dict, Any, List, Optional, Set
-import dpath.util
+import dpath
 import re
 
 from checkov.common.runners.base_runner import strtobool
@@ -21,10 +21,12 @@ class TerraformBlock(Block):
         "source_module",
         "has_dynamic_block",
         "dynamic_attributes",
+        "foreach_attrs",
+        "source_module_object"
     )
 
     def __init__(self, name: str, config: Dict[str, Any], path: str, block_type: BlockType, attributes: Dict[str, Any],
-                 id: str = "", source: str = "", has_dynamic_block: bool = False, dynamic_attributes: dict[str, Any] | None = None,) -> None:
+                 id: str = "", source: str = "", has_dynamic_block: bool = False, dynamic_attributes: dict[str, Any] | None = None) -> None:
         """
             :param name: unique name given to the terraform block, for example: 'aws_vpc.example_name'
             :param config: the section in tf_definitions that belong to this block
@@ -32,11 +34,11 @@ class TerraformBlock(Block):
             :param block_type: BlockType
             :param attributes: dictionary of the block's original attributes in the terraform file
         """
-        super(TerraformBlock, self).__init__(name, config, path, block_type, attributes, id, source, has_dynamic_block, dynamic_attributes)
+        super(TerraformBlock, self).__init__(name, config, path, str(block_type), attributes, id, source, has_dynamic_block, dynamic_attributes)
         self.module_dependency = ""
         self.module_dependency_num = ""
         if path:
-            if strtobool(os.getenv('CHECKOV_ENABLE_NESTED_MODULES', 'False')):
+            if strtobool(os.getenv('CHECKOV_ENABLE_NESTED_MODULES', 'True')):
                 self.path = path
             else:
                 self.path, module_dependency, num = remove_module_dependency_in_path(path)
@@ -55,7 +57,10 @@ class TerraformBlock(Block):
         self.module_connections.setdefault(attribute_key, []).append(vertex_id)
 
     def extract_additional_changed_attributes(self, attribute_key: str) -> List[str]:
-        if self.has_dynamic_block:
+        # if the `attribute_key` starts with a `for_each.` we know the attribute can't be a dynamic attribute as it
+        # represents the for_each of the block, so we don't need extract dynamic changed attributes
+        # Fix: https://github.com/bridgecrewio/checkov/issues/4324
+        if self.has_dynamic_block and not attribute_key.startswith('for_each'):
             return self._extract_dynamic_changed_attributes(attribute_key)
         return super().extract_additional_changed_attributes(attribute_key)
 

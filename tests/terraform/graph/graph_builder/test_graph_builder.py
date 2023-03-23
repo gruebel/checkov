@@ -7,7 +7,7 @@ from checkov.terraform.graph_builder.graph_components.block_types import BlockTy
 from checkov.terraform.graph_builder.graph_to_tf_definitions import convert_graph_vertices_to_tf_definitions
 from checkov.terraform.graph_manager import TerraformGraphManager
 from checkov.common.graph.graph_builder import CustomAttributes
-from checkov.terraform.parser import external_modules_download_path
+from checkov.terraform.modules.module_utils import external_modules_download_path
 
 TEST_DIRNAME = os.path.dirname(os.path.realpath(__file__))
 
@@ -322,3 +322,11 @@ class TestGraphBuilder(TestCase):
         assert resource_2.attributes.get(CustomAttributes.TF_RESOURCE_ADDRESS) == 'aws_s3_bucket.example'
         provider = self.get_vertex_by_name_and_type(local_graph, BlockType.PROVIDER, 'aws.test_provider')
         assert provider.attributes.get(CustomAttributes.TF_RESOURCE_ADDRESS) == 'aws.test_provider'
+
+    # Related to https://github.com/bridgecrewio/checkov/issues/4324
+    def test_build_graph_for_each_with_variables_and_dynamic_not_crash(self):
+        resources_dir = os.path.join(TEST_DIRNAME, '../resources/for_each')
+
+        graph_manager = TerraformGraphManager(db_connector=NetworkxConnector())
+        # Shouldn't throw exception
+        graph_manager.build_graph_from_source_directory(resources_dir)

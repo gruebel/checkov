@@ -4,8 +4,7 @@ import os
 from importlib import util
 from os import path
 
-import setuptools
-from setuptools import setup
+from setuptools import setup, find_packages
 
 # read the contents of your README file
 this_directory = path.abspath(path.dirname(__file__))
@@ -29,19 +28,19 @@ setup(
             "coverage-badge",
             "GitPython==3.1.7",
             "bandit",
-            "jsonschema"
+            "jsonschema",
         ]
     },
     install_requires=[
         "bc-python-hcl2==0.3.51",
-        "bc-detect-secrets==1.4.9",
-        "bc-jsonpath-ng==1.5.8",
+        "bc-detect-secrets==1.4.15",
+        "bc-jsonpath-ng==1.5.9",
         "deep-merge",
         "tabulate",
         "colorama",
         "termcolor",
         "junit-xml>=1.9",
-        "dpath>=1.5.0,<2",
+        "dpath>=2.1.0",
         "pyyaml>=5.4.1",
         "boto3>=1.17",
         "gitpython",
@@ -61,7 +60,7 @@ setup(
         "typing-extensions>=4.1.0",
         "importlib-metadata>=0.12",
         "cachetools",
-        "cyclonedx-python-lib<4.0.0,>=2.4.0",
+        "cyclonedx-python-lib>=2.4.0,<4.0.0",
         "packageurl-python",
         "click>=8.0.0",
         "aiohttp",
@@ -76,7 +75,6 @@ setup(
         "schema",
         "requests>=2.27.0",
         "yarl",
-        "igraph"
     ],
     dependency_links=[],  # keep it empty, needed for pipenv-setup
     license="Apache License 2.0",
@@ -87,10 +85,11 @@ setup(
     author="bridgecrew",
     author_email="meet@bridgecrew.io",
     url="https://github.com/bridgecrewio/checkov",
-    packages=setuptools.find_packages(exclude=["tests*", "integration_tests*"]),
+    packages=find_packages(exclude=["tests*", "integration_tests*"]),
     include_package_data=True,
     package_dir={
         "checkov.ansible.checks.graph_checks": "checkov/ansible/checks/graph_checks",
+        "checkov.arm.checks.graph_checks": "checkov/arm/checks/graph_checks",
         "checkov.bicep.checks.graph_checks": "checkov/bicep/checks/graph_checks",
         "checkov.cloudformation.checks.graph_checks": "checkov/cloudformation/checks/graph_checks",
         "checkov.dockerfile.checks.graph_checks": "checkov/dockerfile/checks/graph_checks",
@@ -101,6 +100,7 @@ setup(
     package_data={
         "checkov": ["py.typed"],
         "checkov.ansible.checks.graph_checks": ["*.yaml"],
+        "checkov.arm.checks.graph_checks": ["*.yaml"],
         "checkov.bicep.checks.graph_checks": ["*.yaml"],
         "checkov.common.util.templates": ["*.jinja2"],
         "checkov.dockerfile.checks.graph_checks": ["*.yaml"],

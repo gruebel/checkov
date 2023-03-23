@@ -5,7 +5,7 @@ import re
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, List, Optional, Tuple
-
+from checkov.common.typing import TFDefinitionKeyType
 import hcl2
 
 
@@ -15,6 +15,7 @@ _ARG_VAR_PATTERN = re.compile(r"[a-zA-Z_]+(\.[a-zA-Z_]+)+")
 
 TERRAFORM_NESTED_MODULE_PATH_PREFIX = '([{'
 TERRAFORM_NESTED_MODULE_PATH_ENDING = '}])'
+TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR = '#*#'
 TERRAFORM_NESTED_MODULE_PATH_SEPARATOR_LENGTH = 3
 
 
@@ -54,6 +55,33 @@ class ParserMode(Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+
+def is_acceptable_module_param(value: Any) -> bool:
+    """
+    This function determines if a value should be passed to a module as a parameter. We don't want to pass
+    unresolved var, local or module references because they can't be resolved from the module, so they need
+    to be resolved prior to being passed down.
+    """
+    value_type = type(value)
+    if value_type is dict:
+        for k, v in value.items():
+            if not is_acceptable_module_param(v) or not is_acceptable_module_param(k):
+                return False
+        return True
+    if value_type is set or value_type is list:
+        for v in value:
+            if not is_acceptable_module_param(v):
+                return False
+        return True
+
+    if value_type is not str:
+        return True
+
+    for vbm in find_var_blocks(value):
+        if vbm.is_simple_var():
+            return False
+    return True
 
 
 def find_var_blocks(value: str) -> List[VarBlockMatch]:
@@ -310,16 +338,16 @@ def to_string(value: Any) -> str:
 def get_current_module_index(full_path: str) -> Optional[int]:
     hcl_index = None
     tf_index = None
-    if TERRAFORM_NESTED_MODULE_PATH_PREFIX not in full_path and '#' not in full_path:
+    if TERRAFORM_NESTED_MODULE_PATH_PREFIX not in full_path and TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR not in full_path:
         return len(full_path)
     if f'.hcl{TERRAFORM_NESTED_MODULE_PATH_PREFIX}' in full_path:
         hcl_index = full_path.index(f'.hcl{TERRAFORM_NESTED_MODULE_PATH_PREFIX}') + 4  # len('.hcl')
-    elif '.hcl#' in full_path:
-        hcl_index = full_path.index('.hcl#') + 4  # len('.hcl')
+    elif f'.hcl{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}' in full_path:
+        hcl_index = full_path.index(f'.hcl{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}') + 4  # len('.hcl')
     if f'.tf{TERRAFORM_NESTED_MODULE_PATH_PREFIX}' in full_path:
         tf_index = full_path.index(f'.tf{TERRAFORM_NESTED_MODULE_PATH_PREFIX}') + 3    # len('.tf')
-    elif '.tf#' in full_path:
-        tf_index = full_path.index('.tf#') + 3  # len('.tf')
+    elif f'.tf{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}' in full_path:
+        tf_index = full_path.index(f'.tf{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}') + 3  # len('.tf')
     if hcl_index and tf_index:
         # returning the index of the first file
         return min(hcl_index, tf_index)
@@ -328,35 +356,43 @@ def get_current_module_index(full_path: str) -> Optional[int]:
     return tf_index
 
 
-def is_nested(full_path: str) -> bool:
-    return TERRAFORM_NESTED_MODULE_PATH_PREFIX in full_path
+def is_nested(full_path: TFDefinitionKeyType) -> bool:
+    from checkov.terraform.modules.module_objects import TFDefinitionKey
+    if isinstance(full_path, str):
+        return TERRAFORM_NESTED_MODULE_PATH_PREFIX in full_path
+    if isinstance(full_path, TFDefinitionKey):
+        return full_path.tf_source_modules is not None
+    return False
 
 
 def get_tf_definition_key(nested_module: str, module_name: str, module_index: Any, nested_key: str = '') -> str:
-    return f"{nested_module}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_name}#{module_index}{nested_key}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
+    return f"{nested_module}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_name}{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}{module_index}{nested_key}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
 
 
 def get_tf_definition_key_from_module_dependency(path: str, module_dependency: str, module_dependency_num: str) -> str:
     if not module_dependency:
         return path
     if not is_nested(module_dependency):
-        return f"{path}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_dependency}#{module_dependency_num}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
+        return f"{path}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_dependency}{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}{module_dependency_num}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
     module_index = get_current_module_index(module_dependency)
-    return f"{path}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_dependency[:module_index]}#{module_dependency_num}{module_dependency[module_index:]}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
+    return f"{path}{TERRAFORM_NESTED_MODULE_PATH_PREFIX}{module_dependency[:module_index]}{TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR}{module_dependency_num}{module_dependency[module_index:]}{TERRAFORM_NESTED_MODULE_PATH_ENDING}"
 
 
-def get_module_from_full_path(file_path: str) -> Tuple[Optional[str], Optional[str]]:
+def get_module_from_full_path(file_path: TFDefinitionKeyType) -> Tuple[Optional[str], Optional[str]]:
+    from checkov.terraform.modules.module_objects import TFDefinitionKey
     if not is_nested(file_path):
         return None, None
+    if isinstance(file_path, TFDefinitionKey):
+        return file_path.tf_source_modules.path, None
     tmp_path = file_path[file_path.index(TERRAFORM_NESTED_MODULE_PATH_PREFIX) + TERRAFORM_NESTED_MODULE_PATH_SEPARATOR_LENGTH: -TERRAFORM_NESTED_MODULE_PATH_SEPARATOR_LENGTH]
     if is_nested(tmp_path):
         module = get_abs_path(tmp_path) + tmp_path[tmp_path.index(TERRAFORM_NESTED_MODULE_PATH_PREFIX):]
-        index = tmp_path[tmp_path.index('#') + 1:tmp_path.index(TERRAFORM_NESTED_MODULE_PATH_PREFIX)]
+        index = tmp_path[tmp_path.index(TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR) + TERRAFORM_NESTED_MODULE_PATH_SEPARATOR_LENGTH:tmp_path.index(TERRAFORM_NESTED_MODULE_PATH_PREFIX)]
     else:
         module = get_abs_path(tmp_path)
-        index = tmp_path[tmp_path.index('#') + 1:]
+        index = tmp_path[tmp_path.index(TERRAFORM_NESTED_MODULE_INDEX_SEPARATOR) + TERRAFORM_NESTED_MODULE_PATH_SEPARATOR_LENGTH:]
     return module, index
 
 
-def get_abs_path(file_path: str) -> str:
-    return file_path[:get_current_module_index(file_path)]
+def get_abs_path(file_path: TFDefinitionKeyType) -> str:
+    return file_path[:get_current_module_index(file_path)] if isinstance(file_path, str) else str(file_path.file_path)

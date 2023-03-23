@@ -39,27 +39,30 @@ def mock_bc_integration() -> BcPlatformIntegration:
 @pytest.fixture(scope='package')
 def scan_result_2() -> Dict[str, Dict[str, Any]]:
     return {
-        "/path/to/requirements.txt": {
-            "repository": "/path/to/requirements.txt",
+        "/requirements.txt": {
+            "repository": "/requirements.txt",
             "passed": True,
             "packages": [
                 {
                     "type": "python",
                     "name": "requests",
                     "version": "2.26.0",
-                    "path": "/path/to/requirements.txt",
+                    "path": "/requirements.txt",
+                    "registry": "https://pypi.python.org/",
                 },
                 {
                     "type": "python",
                     "name": "django",
                     "version": "1.2",
-                    "path": "/path/to/requirements.txt",
+                    "path": "/requirements.txt",
+                    "registry": "https://pypi.python.org/"
                 },
                 {
                     "type": "python",
                     "name": "flask",
                     "version": "0.6",
-                    "path": "/path/to/requirements.txt",
+                    "path": "/requirements.txt",
+                    "registry": "https://pypi.python.org/"
                 },
             ],
             "complianceIssues": None,
@@ -1067,6 +1070,12 @@ def sca_package_2_report(package_mocker: MockerFixture, scan_result_2: Dict[str,
     scanner_mock = MagicMock()
     scanner_mock.return_value.scan.return_value = scan_result_2
     package_mocker.patch("checkov.sca_package_2.runner.Scanner", side_effect=scanner_mock)
+    # package_mocker.patch()
+    def none() -> None:
+        pass
+
+    bc_integration.set_s3_integration = none
+
 
     return Runner().run(root_folder=EXAMPLES_DIR)
 
